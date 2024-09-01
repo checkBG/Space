@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="881409763997275156" name="call_notification_answer_action">"Cavab verin"</string>
+    <string msgid="8793775615905189152" name="call_notification_answer_video_action">"Video"</string>
+    <string msgid="3229508546291798546" name="call_notification_decline_action">"İmtina edin"</string>
+    <string msgid="2659457946726154263" name="call_notification_hang_up_action">"Dəstəyi asın"</string>
+    <string msgid="6107532579223922871" name="call_notification_incoming_text">"Gələn zəng"</string>
+    <string msgid="8623827134497363134" name="call_notification_ongoing_text">"Davam edən zəng"</string>
+    <string msgid="59049573811482460" name="call_notification_screening_text">"Gələn zəng göstərilir"</string>
+    <string msgid="406453423630273620" name="close_drawer">"Naviqasiya menyusunu bağlayın"</string>
+    <string msgid="7573152094250666567" name="close_sheet">"Səhifəni bağlayın"</string>
+    <string msgid="8038256446254964252" name="default_error_message">"Yanlış daxiletmə"</string>
+    <string msgid="6312721426453364202" name="default_popup_window_title">"Popap Pəncərəsi"</string>
+    <string msgid="1890207353314751437" name="dropdown_menu">"Aşağı açılan menyu"</string>
+    <string msgid="6827826412747255547" name="in_progress">"Davam edir"</string>
+    <string msgid="7933458017204019916" name="indeterminate">"Qismən yoxlanıb"</string>
+    <string msgid="2988463736136100848" name="m3c_bottom_sheet_collapse_description">"Aşağıdakı vərəqi yığcamlaşdırın"</string>
+    <string msgid="1555567894577437024" name="m3c_bottom_sheet_dismiss_description">"Aşağıdakı vərəqi rədd edin"<

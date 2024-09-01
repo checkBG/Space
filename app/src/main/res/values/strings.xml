@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Space</string>
+    <string name="p_coin">P? Coin</string>
+    <string name="pl_coin">Pl? Coin</string>
+    <string name="pla_coin">Pla? Coin</string>
+    <string name="plan_coin">Plan? Coin</string>
+    <string name="plane_coin">Plane? Coin</string>
+    <string name="planet_coin">Planet Coin</string>
+    <string name="clicker">Clicker</string>
+    <string name="pumping_content">pumping</string>
+    <string name="exchange_content">exchange</string>
+</resources>

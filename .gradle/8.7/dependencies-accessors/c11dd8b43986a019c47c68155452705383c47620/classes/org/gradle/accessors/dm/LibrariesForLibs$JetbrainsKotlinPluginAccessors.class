@@ -1,0 +1,18 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.calculator.app-mergeDebugResources-2:/values-hy/values-hy.xml",
+            "map": [
+                {
+                    "source": "D:\\ProjectForAndroid\\caches\\transforms-4\\d9269dc9362d6f79fd0ee8a8b3190bbb\\transformed\\core-1.13.1\\res\\values-hy\\values-hy.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,155,260,358,457,562,664,775",
+                        "endColumns": "99,104,97,98,104,101,110,100",
+                        "endOffsets": "150,255,353,452,557,659,770,871"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,79",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,205,310,408,507,612,714,82

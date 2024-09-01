@@ -1,0 +1,18 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.calculator.app-mergeDebugResources-2:/values-as/values-as.xml",
+            "map": [
+                {
+                    "source": "D:\\ProjectForAndroid\\caches\\transforms-4\\f8dc0ca9b07ebd989144c1bbf89669ee\\transformed\\foundation-release\\res\\values-as\\values-as.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,140",
+                        "endColumns": "84,87",
+                        "endOffsets": "135,223"
+                    },
+                    "to": {
+                        "startLines": "83,84",
+                        "startColumns": "4,4",
+          
