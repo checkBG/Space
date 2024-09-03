@@ -32,8 +32,7 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 42.sp,
-        letterSpacing = 5.sp
+        fontSize = 42.sp
     ),
     displayMedium = TextStyle(
         fontFamily = EaterRegular,

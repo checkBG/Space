@@ -4,6 +4,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.space.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +35,9 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    private val coroutineScope =
+        CoroutineScope(viewModelScope.coroutineContext + Dispatchers.Default)
+
     var textTopAppBar = mutableIntStateOf(updateTextTopAppBar())
         private set
 
@@ -40,34 +45,41 @@ class GameViewModel : ViewModel() {
         private set
 
     fun updateCoinsForTap() {
-        _planet.apply {
-            val currentCoins = value.coins + value.coinsPerTap
-            val currentEnergy = value.energy - value.coinsPerTap
+        coroutineScope.launch {
+            _planet.apply {
+                val currentCoins = value.coins + value.coinsPerTap
+                val currentEnergy = value.energy - value.coinsPerTap
 
-            if (value.energy >= value.coinsPerTap) {
-                update { currentPlanet ->
-                    currentPlanet.copy(
-                        coins = currentCoins,
-                        energy = currentEnergy
-                    )
+                if (value.energy >= value.coinsPerTap) {
+                    update { currentPlanet ->
+                        currentPlanet.copy(
+                            coins = currentCoins,
+                            energy = currentEnergy
+                        )
+                    }
+                } else {
+                    update { currentPlanet ->
+                        currentPlanet.copy(
+                            coins = value.coins + value.energy,
+                            energy = 0
+                        )
+                    }
                 }
-            } else {
-                update { currentPlanet ->
-                    currentPlanet.copy(
-                        coins = value.coins + value.energy,
-                        energy = 0
-                    )
-                }
+                textTopAppBar.intValue = updateTextTopAppBar()
+                progressPercentage = updateProgressPercentage()
             }
-            textTopAppBar.intValue = updateTextTopAppBar()
-            progressPercentage = updateProgressPercentage()
         }
     }
 
-    private suspend fun energyRecovery() {
-        viewModelScope.launch {
+    private fun energyRecovery() {
+        coroutineScope.launch {
             _planet.apply {
-                val increaseEnergy = value.energyPerSecond
+                val increaseEnergy =
+                    if ((value.energy + value.energyPerSecond) <= value.maxEnergy) {
+                        value.energyPerSecond
+                    } else {
+                        value.maxEnergy - value.energy
+                    }
                 val updatedEnergy = value.energy + increaseEnergy
 
                 update { currentPlanet ->
@@ -77,15 +89,26 @@ class GameViewModel : ViewModel() {
                 }
 
                 progressPercentage = updateProgressPercentage()
+            }
+        }
+    }
 
-                delay(1000)
+    private suspend fun checkEnergyStatus() {
+        if (planet.value.energy >= planet.value.maxEnergy) {
+            // Если энергия достигла максимального значения, ждем, пока она не станет меньше
+            while (planet.value.energy == planet.value.maxEnergy) {
+                delay(100)
             }
         }
     }
 
     init {
-        while (planet.value.energy < planet.value.maxEnergy) {
-            viewModelScope.launch { energyRecovery() }
+        coroutineScope.launch {
+            while (true) {
+                delay(1000)
+                energyRecovery()
+                checkEnergyStatus()
+            }
         }
     }
 }
