@@ -1,8 +1,15 @@
 package com.example.space.ui.test
 
+import androidx.lifecycle.viewModelScope
 import com.example.space.R
 import com.example.space.model.GameViewModel
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class GameViewModelTest {
