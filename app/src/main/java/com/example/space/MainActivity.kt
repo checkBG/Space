@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.space.fundamental.CountOfCoinsRow
 import com.example.space.fundamental.CustomProgressBar
-import com.example.space.fundamental.SpaceApp
+import com.example.space.fundamental.PlanetScreen
 import com.example.space.fundamental.SpaceBackground
 import com.example.space.fundamental.SpaceButtonImageCenter
 import com.example.space.ui.theme.SpaceTheme
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    SpaceApp()
+                    PlanetScreen()
                 }
             }
         }
@@ -75,7 +75,7 @@ fun SpaceBackgroundPreview() {
 fun SpaceAppPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            SpaceApp(modifier = Modifier.padding(innerPadding))
+            PlanetScreen(modifier = Modifier.padding(innerPadding))
         }
     }
 }

@@ -61,35 +61,24 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-
 @Composable
-fun SpaceApp(
+fun PlanetScreen(
     modifier: Modifier = Modifier,
-    gameViewModel: GameViewModel = viewModel()
+    gameViewModel: GameViewModel
 ) {
     val gamePlanetState by gameViewModel.planet.collectAsState()
 
-    Scaffold(
-        topBar = {
-            SpaceTopAppBar(textTopAppBar = gameViewModel.textTopAppBar.intValue)
-        },
-        bottomBar = {
-            BottomAppBarIcons()
-        }
-    ) { innerPadding ->
-        @Suppress("UNUSED_VARIABLE") val inPadding = innerPadding
 
-        Box(modifier = modifier) {
-            SpaceBackground()
+    Box(modifier = modifier) {
+        SpaceBackground()
 
-            SpaceButtonImageCenter(onClick = { gameViewModel.updateCoinsForTap() })
+        SpaceButtonImageCenter(onClick = { gameViewModel.updateCoinsForTap() })
 
-            CountOfCoinsRow(
-                currentCoins = gamePlanetState.coins,
-                progressPercentage = gameViewModel.progressPercentage
-            )
+        CountOfCoinsRow(
+            currentCoins = gamePlanetState.coins,
+            progressPercentage = gameViewModel.progressPercentage
+        )
 
-        }
     }
 }
 
@@ -167,49 +156,6 @@ fun CustomProgressBar(
                     dstOffset = IntOffset(x.roundToInt(), y.roundToInt())
                 )
             })
-    }
-}
-
-@Composable
-fun BottomAppBarIcons() {
-    NavigationBar(
-        containerColor = Color.Transparent,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-//        Spacer(modifier = Modifier.weight(1f, fill = true))
-//
-//        IconButton(onClick = { /*TODO*/ }) {
-//            Icon(
-//                painter = painterResource(id = R.drawable.planet_zastavka_tini),
-//                contentDescription = stringResource(id = R.string.clicker),
-//                tint = Color.Unspecified,
-//                modifier = Modifier.size(42.dp)
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.weight(1f, fill = true))
-//
-//        IconButton(onClick = { /*TODO*/ }) {
-//            Icon(
-//                painter = painterResource(id = R.drawable.star),
-//                contentDescription = stringResource(R.string.pumping_content),
-//                tint = Color.Unspecified,
-//                modifier = Modifier.size(42.dp)
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.weight(1f, fill = true))
-//
-//        IconButton(onClick = { /*TODO*/ }) {
-//            Icon(
-//                painter = painterResource(id = R.drawable.exchange),
-//                contentDescription = stringResource(R.string.exchange_content),
-//                tint = Color.Unspecified,
-//                modifier = Modifier.size(42.dp)
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.weight(1f, fill = true))
     }
 }
 

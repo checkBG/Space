@@ -9,4 +9,6 @@
     <string name="clicker">Clicker</string>
     <string name="pumping_content">pumping</string>
     <string name="exchange_content">exchange</string>
+    <string name="status">Status of your achievements</string>
+    <string name="upgrade">Upgrade your planet</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.space.model
 
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.space.R
@@ -56,8 +57,12 @@ class GameViewModel : ViewModel() {
     private val coroutineScope =
         CoroutineScope(viewModelScope.coroutineContext + Dispatchers.Default)
 
-    var textTopAppBar = mutableIntStateOf(updateTextTopAppBar())
+    var planetAppBar = mutableIntStateOf(updateTextTopAppBar())
         private set
+
+    val upgradeAppBar = R.string.upgrade
+
+    val statusAppBar = R.string.status
 
     var progressPercentage = updateProgressPercentage()
         private set
@@ -82,7 +87,7 @@ class GameViewModel : ViewModel() {
                     )
                 }
             }
-            textTopAppBar.intValue = updateTextTopAppBar()
+            planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
         }
     }
