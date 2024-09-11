@@ -1,7 +1,6 @@
 package com.example.space.fundamental
 
 import android.annotation.SuppressLint
-import android.health.connect.datatypes.units.Energy
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -57,7 +56,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
-import com.example.space.model.Planet
 import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -100,9 +98,10 @@ fun CustomProgressBar(
     modifier: Modifier = Modifier,
     progressPercentage: Float = 1.0f
 ) {
-    val image = ImageBitmap.imageResource(id = R.drawable.moon)
-    val widthImage = 20
-    val heightImage = 20
+    val image = ImageBitmap.imageResource(id = R.drawable.moon_png42)
+    val widthImage = 25
+    val heightImage = 25
+
 
     Box(
         modifier = modifier

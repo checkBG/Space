@@ -16,7 +16,6 @@ import com.example.space.fundamental.CustomProgressBar
 import com.example.space.fundamental.SpaceApp
 import com.example.space.fundamental.SpaceBackground
 import com.example.space.fundamental.SpaceButtonImageCenter
-import com.example.space.model.Planet
 import com.example.space.ui.theme.SpaceTheme
 
 class MainActivity : ComponentActivity() {

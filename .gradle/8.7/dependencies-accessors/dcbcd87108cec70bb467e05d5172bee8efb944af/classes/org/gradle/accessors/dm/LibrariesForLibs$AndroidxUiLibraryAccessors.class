@@ -1,18 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <string msgid="881409763997275156" name="call_notification_answer_action">"മറുപടി നൽകുക"</string>
-    <string msgid="8793775615905189152" name="call_notification_answer_video_action">"വീഡിയോ"</string>
-    <string msgid="3229508546291798546" name="call_notification_decline_action">"നിരസിക്കുക"</string>
-    <string msgid="2659457946726154263" name="call_notification_hang_up_action">"കോൾ നിർത്തുക"</string>
-    <string msgid="6107532579223922871" name="call_notification_incoming_text">"ഇൻകമിംഗ് കോൾ"</string>
-    <string msgid="8623827134497363134" name="call_notification_ongoing_text">"സജീവമായ കോൾ"</string>
-    <string msgid="59049573811482460" name="call_notification_screening_text">"ഇൻകമിംഗ് കോൾ സ്‌ക്രീൻ ചെയ്യുന്നു"</string>
-    <string msgid="406453423630273620" name="close_drawer">"നാവിഗേഷൻ മെനു അടയ്‌ക്കുക"</string>
-    <string msgid="7573152094250666567" name="close_sheet">"ഷീറ്റ് അടയ്ക്കുക"</string>
-    <string msgid="8038256446254964252" name="default_error_message">"ഇൻപുട്ട് അസാധുവാണ്"</string>
-    <string msgid="6312721426453364202" name="default_popup_window_title">"പോപ്പ്-അപ്പ് വിൻഡോ"</string>
-    <string msgid="1890207353314751437" name="dropdown_menu">"ഡ്രോപ്പ്‌ഡൗൺ മെനു"</string>
-    <string msgid="6827826412747255547" name="in_progress">"പുരോഗമിക്കുന്നു"</string>
-    <string msgid="7933458017204019916" name="indeterminate">"ഭാഗികമായി ചെക്ക് മാർക്കിട്ടു"</string>
-    <string msgid="542007171693138492" name="navigation_menu">"നാവിഗേഷൻ മെനു"</string>
-    <string msgid="6610465462668679431" name="not_selected">"തിരഞ്ഞെടുത�
