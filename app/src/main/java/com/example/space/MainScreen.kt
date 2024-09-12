@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
@@ -20,12 +21,13 @@ import com.example.space.fundamental.Screens
 import com.example.space.fundamental.SpaceTopAppBar
 import com.example.space.model.GameViewModel
 
+val gameViewModel: GameViewModel = GameViewModel()
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     /* TODO: WARNING IT'LL BE ABLE TO CALL ANY PROBLEMS!!
     TODO: If any: made this property as a public to change state in another Classes */
-    val gameViewModel: GameViewModel = viewModel()
     val backStack by navController.currentBackStackEntryAsState()
     val currentScreen = backStack?.destination
 
@@ -54,7 +56,7 @@ fun BottomBar(navController: NavHostController, currentScreen: NavDestination?) 
         BottomBarScreen.Status,
     )
 
-    NavigationBar {
+    NavigationBar(containerColor = Color.Transparent) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,

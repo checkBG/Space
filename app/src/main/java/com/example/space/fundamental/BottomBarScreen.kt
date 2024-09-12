@@ -6,9 +6,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.space.gameViewModel
 import com.example.space.model.GameViewModel
 
-private val GameViewModel = GameViewModel()
+//private val GameViewModel = GameViewModel()
 
 sealed class BottomBarScreen(
     val route: String,
@@ -44,18 +45,18 @@ enum class Screens(
     val icon: ImageVector
 ) {
     Planet(
-        topAppTitle = GameViewModel.upgradeAppBar,
-        bottomAppTitle = GameViewModel.planetBottomAppBar,
+        topAppTitle = gameViewModel.planetAppBar.intValue,
+        bottomAppTitle = gameViewModel.planetBottomAppBar,
         icon = Icons.Filled.Home
     ),
     Upgrade(
-        topAppTitle = GameViewModel.upgradeAppBar,
-        bottomAppTitle = GameViewModel.upgradeBottomAppBar,
+        topAppTitle = gameViewModel.upgradeAppBar,
+        bottomAppTitle = gameViewModel.upgradeBottomAppBar,
         icon = Icons.Filled.KeyboardArrowUp
     ),
     Status(
-        topAppTitle = GameViewModel.statusAppBar,
-        bottomAppTitle = GameViewModel.statusBottomAppBar,
+        topAppTitle = gameViewModel.statusAppBar,
+        bottomAppTitle = gameViewModel.statusBottomAppBar,
         icon = Icons.Filled.Star
     )
 }
