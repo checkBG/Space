@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Space</string>
+    <string name="planet_bottom">Planet</string>
     <string name="p_coin">P? Coin</string>
     <string name="pl_coin">Pl? Coin</string>
     <string name="pla_coin">Pla? Coin</string>
@@ -9,6 +10,8 @@
     <string name="clicker">Clicker</string>
     <string name="pumping_content">pumping</string>
     <string name="exchange_content">exchange</string>
-    <string name="status">Status of your achievements</string>
     <string name="upgrade">Upgrade your planet</string>
+    <string name="upgrade_bottom">Upgrade</string>
+    <string name="status">Status of your achievements</string>
+    <string name="status_bottom">Status</string>
 </resources>

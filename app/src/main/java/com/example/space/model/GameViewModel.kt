@@ -59,10 +59,13 @@ class GameViewModel : ViewModel() {
 
     var planetAppBar = mutableIntStateOf(updateTextTopAppBar())
         private set
+    val planetBottomAppBar = R.string.planet_bottom
 
     val upgradeAppBar = R.string.upgrade
+    val upgradeBottomAppBar = R.string.upgrade_bottom
 
     val statusAppBar = R.string.status
+    val statusBottomAppBar = R.string.status_bottom
 
     var progressPercentage = updateProgressPercentage()
         private set

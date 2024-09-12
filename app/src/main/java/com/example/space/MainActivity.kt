@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.fundamental.CountOfCoinsRow
 import com.example.space.fundamental.CustomProgressBar
 import com.example.space.fundamental.PlanetScreen
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    PlanetScreen()
+                    MainScreen()
                 }
             }
         }
@@ -75,7 +76,7 @@ fun SpaceBackgroundPreview() {
 fun SpaceAppPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            PlanetScreen(modifier = Modifier.padding(innerPadding))
+            PlanetScreen(modifier = Modifier.padding(innerPadding), gameViewModel = viewModel())
         }
     }
 }

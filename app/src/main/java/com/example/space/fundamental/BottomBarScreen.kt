@@ -1,6 +1,5 @@
 package com.example.space.fundamental
 
-import android.graphics.drawable.Icon
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -13,33 +12,50 @@ private val GameViewModel = GameViewModel()
 
 sealed class BottomBarScreen(
     val route: String,
-    val title: Int,
+    @StringRes val topAppTitle: Int,
+    @StringRes val bottomAppTitle: Int,
     val icon: ImageVector
 ) {
     object Planet : BottomBarScreen(
         route = Screens.Planet.name,
-        title = Screens.Planet.title,
+        topAppTitle = Screens.Planet.topAppTitle,
+        bottomAppTitle = Screens.Planet.bottomAppTitle,
         icon = Screens.Planet.icon
     )
 
     object Upgrade : BottomBarScreen(
         route = Screens.Upgrade.name,
-        title = Screens.Upgrade.title,
+        topAppTitle = Screens.Upgrade.topAppTitle,
+        bottomAppTitle = Screens.Upgrade.bottomAppTitle,
         icon = Screens.Upgrade.icon
     )
 
     object Status : BottomBarScreen(
         route = Screens.Status.name,
-        title = Screens.Status.title,
+        topAppTitle = Screens.Status.topAppTitle,
+        bottomAppTitle = Screens.Status.bottomAppTitle,
         icon = Screens.Status.icon
     )
 }
 
 enum class Screens(
-    @StringRes val title: Int,
+    @StringRes val topAppTitle: Int,
+    @StringRes val bottomAppTitle: Int,
     val icon: ImageVector
 ) {
-    Planet(title = GameViewModel.upgradeAppBar, icon = Icons.Filled.Home),
-    Upgrade(title = GameViewModel.upgradeAppBar, icon = Icons.Filled.KeyboardArrowUp),
-    Status(title = GameViewModel.statusAppBar, icon = Icons.Filled.Star)
+    Planet(
+        topAppTitle = GameViewModel.upgradeAppBar,
+        bottomAppTitle = GameViewModel.planetBottomAppBar,
+        icon = Icons.Filled.Home
+    ),
+    Upgrade(
+        topAppTitle = GameViewModel.upgradeAppBar,
+        bottomAppTitle = GameViewModel.upgradeBottomAppBar,
+        icon = Icons.Filled.KeyboardArrowUp
+    ),
+    Status(
+        topAppTitle = GameViewModel.statusAppBar,
+        bottomAppTitle = GameViewModel.statusBottomAppBar,
+        icon = Icons.Filled.Star
+    )
 }
