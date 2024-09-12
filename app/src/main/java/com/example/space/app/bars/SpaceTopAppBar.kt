@@ -1,5 +1,6 @@
 package com.example.space.app.bars
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -21,13 +22,14 @@ import com.example.space.R
 @Composable
 fun SpaceTopAppBar(
     @StringRes textTopAppBar: Int,
+    @ColorRes color: Int,
     style: TextStyle
 ) {
     CenterAlignedTopAppBar(
         title = {
             Text(
                 text = stringResource(id = textTopAppBar),
-                color = colorResource(id = R.color.persian_blue),
+                color = colorResource(id = color),
                 style = style,
                 modifier = Modifier
 //                    .fillMaxWidth()

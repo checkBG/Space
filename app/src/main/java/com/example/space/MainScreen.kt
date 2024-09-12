@@ -45,7 +45,8 @@ fun MainScreen() {
                     MaterialTheme.typography.displaySmall
                 } else {
                     MaterialTheme.typography.displayMedium
-                }
+                },
+                color = Screens.valueOf(value = currentScreen?.route ?: Screens.Planet.name).color
             )
         },
         bottomBar = {

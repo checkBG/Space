@@ -164,6 +164,7 @@ class GameViewModel : ViewModel() {
                     coins = updatedCoins
                 )
             }
+            planetAppBar.intValue = updateTextTopAppBar()
         }
     }
 

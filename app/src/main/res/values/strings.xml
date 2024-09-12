@@ -12,6 +12,6 @@
     <string name="exchange_content">exchange</string>
     <string name="upgrade">Upgrade your planet</string>
     <string name="upgrade_bottom">Upgrade</string>
-    <string name="status">Status of your achievements</string>
+    <string name="status">Your achievements</string>
     <string name="status_bottom">Status</string>
 </resources>
