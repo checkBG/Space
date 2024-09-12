@@ -1,7 +1,6 @@
 package com.example.space.fundamental
 
 import android.annotation.SuppressLint
-import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -17,17 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,11 +39,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
 import java.util.Locale
@@ -157,34 +145,6 @@ fun CustomProgressBar(
                 )
             })
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SpaceTopAppBar(
-    @StringRes textTopAppBar: Int
-) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = stringResource(id = textTopAppBar),
-                color = colorResource(id = R.color.persian_blue),
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .wrapContentWidth(align = Alignment.End)
-//                    .padding(end = 20.dp)
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = null, tint = Color.White)
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent.copy(alpha = 0.7f)
-        )
-    )
 }
 
 @Composable

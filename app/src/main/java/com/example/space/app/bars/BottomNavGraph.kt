@@ -1,4 +1,4 @@
-package com.example.space
+package com.example.space.app.bars
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.space.fundamental.BottomBarScreen
 import com.example.space.fundamental.PlanetScreen
 import com.example.space.fundamental.StatusScreen
 import com.example.space.fundamental.UpgradeScreen

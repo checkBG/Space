@@ -1,4 +1,4 @@
-package com.example.space.fundamental
+package com.example.space.app.bars
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -6,10 +6,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.space.R
 import com.example.space.gameViewModel
-import com.example.space.model.GameViewModel
 
 //private val GameViewModel = GameViewModel()
+//private val planetTopAppBarStateFLow = mutableIntStateOf(gameViewModel.planetAppBar.intValue)
 
 sealed class BottomBarScreen(
     val route: String,
@@ -45,7 +46,8 @@ enum class Screens(
     val icon: ImageVector
 ) {
     Planet(
-        topAppTitle = gameViewModel.planetAppBar.intValue,
+        topAppTitle = R.string.app_name, /* this parameter definitely should be initialized in MainScreen
+because it always changes if count of coins become define amount initialized in viewModel */
         bottomAppTitle = gameViewModel.planetBottomAppBar,
         icon = Icons.Filled.Home
     ),

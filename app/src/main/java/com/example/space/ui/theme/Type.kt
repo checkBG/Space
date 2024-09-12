@@ -36,14 +36,18 @@ val Typography = Typography(
     ),
     displayMedium = TextStyle(
         fontFamily = EaterRegular,
-//        fontFamily = YesevaOneRegular,
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
+        fontSize = 24.sp
 //        drawStyle = Stroke(
 //            miter = 3f,
 //            width = 3f,
 //            join = StrokeJoin.Round
 //        )
+    ),
+    displaySmall = TextStyle(
+        fontFamily = YesevaOneRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
     )
     /* Other default text styles to override
     titleLarge = TextStyle(

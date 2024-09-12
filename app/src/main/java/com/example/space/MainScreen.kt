@@ -2,6 +2,7 @@ package com.example.space
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -10,15 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.space.fundamental.BottomBarScreen
-import com.example.space.fundamental.Screens
-import com.example.space.fundamental.SpaceTopAppBar
+import com.example.space.app.bars.BottomBarScreen
+import com.example.space.app.bars.BottomNavGraph
+import com.example.space.app.bars.Screens
+import com.example.space.app.bars.SpaceTopAppBar
 import com.example.space.model.GameViewModel
 
 val gameViewModel: GameViewModel = GameViewModel()
@@ -26,24 +27,32 @@ val gameViewModel: GameViewModel = GameViewModel()
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    /* TODO: WARNING IT'LL BE ABLE TO CALL ANY PROBLEMS!!
-    TODO: If any: made this property as a public to change state in another Classes */
     val backStack by navController.currentBackStackEntryAsState()
     val currentScreen = backStack?.destination
+    val conditionForTopAppBar = (currentScreen?.route ?: Screens.Planet.name) != Screens.Planet.name
 
     Scaffold(
         topBar = {
             SpaceTopAppBar(
-                textTopAppBar = Screens.valueOf(
-                    value = currentScreen?.route ?: Screens.Planet.name
-                ).topAppTitle
+                textTopAppBar = if (conditionForTopAppBar) {
+                    Screens.valueOf(
+                        value = currentScreen?.route ?: Screens.Planet.name
+                    ).topAppTitle
+                } else {
+                    gameViewModel.planetAppBar.intValue
+                },
+                style = if (conditionForTopAppBar) {
+                    MaterialTheme.typography.displaySmall
+                } else {
+                    MaterialTheme.typography.displayMedium
+                }
             )
         },
         bottomBar = {
             BottomBar(navController = navController, currentScreen = currentScreen)
         }
     ) { innerPadding ->
-        val unnecessaryPadding = innerPadding
+        @Suppress("UNUSED_VARIABLE") val unnecessaryPadding = innerPadding
         BottomNavGraph(navController = navController, gameViewModel = gameViewModel)
     }
 }
