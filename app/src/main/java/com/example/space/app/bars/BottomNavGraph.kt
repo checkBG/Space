@@ -14,7 +14,8 @@ import com.example.space.model.GameViewModel
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -26,7 +27,7 @@ fun BottomNavGraph(
         }
 
         composable(route = BottomBarScreen.Upgrade.route) {
-            UpgradeScreen(gameViewModel = gameViewModel)
+            UpgradeScreen(gameViewModel = gameViewModel, modifier = modifier)
         }
 
         composable(route = BottomBarScreen.Status.route) {

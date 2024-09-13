@@ -1,17 +1,16 @@
 package com.example.space.model
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-
-//object UpgradesCards {
-//    val listOfUpdates = listOf(
-//
-//    )
-//}
+import com.example.space.app.bars.BottomBarScreen
 
 data class UpdateData(
     @StringRes val updatableObject: Int,
     @StringRes val updatableDescription: Int,
-//    val
+    @DrawableRes val updatableImage: Int,
+    val currentLevel: Int,
+    val nextLevel: Int?,
+    val isMaxLevel: Boolean
 )
 
 sealed class Progress(val value: Int) {

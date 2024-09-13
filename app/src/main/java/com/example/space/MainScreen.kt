@@ -1,6 +1,7 @@
 package com.example.space
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -11,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
@@ -58,8 +60,8 @@ fun MainScreen() {
             BottomBar(navController = navController, currentScreen = currentScreen)
         }
     ) { innerPadding ->
-        @Suppress("UNUSED_VARIABLE") val unnecessaryPadding = innerPadding
-        BottomNavGraph(navController = navController, gameViewModel = gameViewModel)
+//        @Suppress("UNUSED_VARIABLE") val unnecessaryPadding = innerPadding
+        BottomNavGraph(navController = navController, gameViewModel = gameViewModel, modifier = Modifier.padding(innerPadding))
     }
 }
 

@@ -176,6 +176,45 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    private fun isMaxLevel(level: Int): Boolean = level in 1..10
+    private fun nextLevel(level: Int): Int? = if (level + 1 <= 10) (level + 1) else null
+
+    val listOfUpdates = listOf(
+        UpdateData(
+            updatableObject = R.string.coin_per_tap,
+            updatableDescription = R.string.coin_per_tap_description,
+            updatableImage = R.drawable.coin_with_a_clover_svgrepo_com,
+            currentLevel = planet.value.levelCoinsPerTap,
+            nextLevel = nextLevel(level = planet.value.levelCoinsPerTap),
+            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerTap)
+        ),
+        UpdateData(
+            updatableObject = R.string.coin_per_second,
+            updatableDescription = R.string.coin_per_second_description,
+            updatableImage = R.drawable.money_coin_svgrepo_com,
+            currentLevel = planet.value.levelCoinsPerSecond,
+            nextLevel = nextLevel(level = planet.value.levelCoinsPerSecond),
+            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerSecond)
+        ),
+        UpdateData(
+            updatableObject = R.string.max_energy,
+            updatableDescription = R.string.max_energy_description,
+            updatableImage = R.drawable.battery_svgrepo_com,
+            currentLevel = planet.value.levelMaxEnergy,
+            nextLevel = nextLevel(level = planet.value.levelMaxEnergy),
+            isMaxLevel = isMaxLevel(level = planet.value.levelMaxEnergy)
+        ),
+        UpdateData(
+            updatableObject = R.string.energy_per_second,
+            updatableDescription = R.string.energy_per_second_description,
+            updatableImage = R.drawable.battery_charge_alert_svgrepo_com,
+            currentLevel = planet.value.levelEnergyPerSecond,
+            nextLevel = nextLevel(level = planet.value.levelEnergyPerSecond),
+            isMaxLevel = isMaxLevel(level = planet.value.levelEnergyPerSecond)
+        )
+    )
+
+
     private fun energyRecovery() {
         _planet.apply {
             val increaseEnergy =
