@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,11 +20,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,8 +56,10 @@ fun UpgradeListLazyColumn(
     gameViewModel: GameViewModel,
     modifier: Modifier = Modifier
 ) {
+    val listOfUpdatesUi by gameViewModel.listOfUpdates.collectAsState()
+
     LazyColumn(modifier = modifier) {
-        itemsIndexed(items = gameViewModel.listOfUpdates) { index, updatableData ->
+        itemsIndexed(items = listOfUpdatesUi) { index, updatableData ->
             updatableData.apply {
                 UpgradeSelectionCard(
                     gameViewModel = gameViewModel,
@@ -83,6 +87,9 @@ fun UpgradeSelectionCard(
     index: Int,
     modifier: Modifier = Modifier
 ) {
+    val listOfUpdatesUi by gameViewModel.listOfUpdates.collectAsState()
+    val gamePlanetState by gameViewModel.planet.collectAsState()
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
     // val screenHeight = configuration.screenHeightDp
@@ -92,7 +99,7 @@ fun UpgradeSelectionCard(
             .width(width = screenWidth.dp)
             .padding(start = 20.dp, end = 20.dp, bottom = 3.dp, top = 3.dp)
     ) {
-        gameViewModel.listOfUpdates[index].apply {
+        listOfUpdatesUi[index].apply {
             Column(
                 modifier = Modifier.padding(10.dp),
                 horizontalAlignment = Alignment.Start,
@@ -115,16 +122,39 @@ fun UpgradeSelectionCard(
 
                 if (nextLevel != null) {
                     Text(
-                        text = stringResource(
-                            id = updatableDescription,
-                            currentLevel,
-                            nextLevel
-                        ), style = TextStyle(fontSize = 18.sp)
+                        text = stringResource(id = updatableDescription),
+                        style = TextStyle(fontSize = 18.sp)
                     )
 
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Column {
+                        Text(
+                            text = stringResource(
+                                id = R.string.levels,
+                                currentLevel,
+                                nextLevel
+                            ),
+                            style = TextStyle(fontSize = 18.sp)
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f, fill = false))
+
+                        Text(
+                            text = stringResource(
+                                id = R.string.require,
+                                gamePlanetState.coins,
+                                requiredToUp
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Button(
-                        onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                        onClick = { onClick(index, requiredToUp, nextLevel) },
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.turquoise)),
+                        enabled = (gamePlanetState.coins - requiredToUp >= 0),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 8.dp, end = 8.dp)

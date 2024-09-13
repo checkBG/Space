@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private val rangeOfLevels = 1..10
+
 class GameViewModel : ViewModel() {
     private val _planet = MutableStateFlow(Planet.initPlanet())
     val planet: StateFlow<Planet>
@@ -176,17 +178,37 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun isMaxLevel(level: Int): Boolean = level in 1..10
-    private fun nextLevel(level: Int): Int? = if (level + 1 <= 10) (level + 1) else null
+    private fun isMaxLevel(level: Int): Boolean = level in rangeOfLevels
+    private fun nextLevel(level: Int): Int? = if (level.inc() <= rangeOfLevels.last()) level.inc() else null
+    private fun requiredToUp(level: Int): Int = when (level) {
+        1 -> 100
+        2 -> 500
+        3 -> 1000
+        4 -> 2000
+        5 -> 4000
+        6 -> 10_000
+        7 -> 25_000
+        8 -> 35_000
+        9 -> 50_000
+        else -> 100_000
+    }
 
-    val listOfUpdates = listOf(
+    private val _listOfUpdates = MutableStateFlow(mutableListOf(
         UpdateData(
             updatableObject = R.string.coin_per_tap,
             updatableDescription = R.string.coin_per_tap_description,
             updatableImage = R.drawable.coin_with_a_clover_svgrepo_com,
             currentLevel = planet.value.levelCoinsPerTap,
             nextLevel = nextLevel(level = planet.value.levelCoinsPerTap),
-            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerTap)
+            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerTap),
+            requiredToUp = requiredToUp(level = planet.value.levelCoinsPerTap),
+            onClick = { index, requiredToUp, nextLevel ->
+                upgradeCoinsPerTap(
+                    requiredToUp = requiredToUp,
+                    nextLevel = nextLevel,
+                    index = index
+                )
+            }
         ),
         UpdateData(
             updatableObject = R.string.coin_per_second,
@@ -194,7 +216,15 @@ class GameViewModel : ViewModel() {
             updatableImage = R.drawable.money_coin_svgrepo_com,
             currentLevel = planet.value.levelCoinsPerSecond,
             nextLevel = nextLevel(level = planet.value.levelCoinsPerSecond),
-            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerSecond)
+            isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerSecond),
+            requiredToUp = requiredToUp(level = planet.value.levelCoinsPerSecond),
+            onClick = { index, requiredToUp, nextLevel ->
+                upgradeCoinsPerSecond(
+                    requiredToUp = requiredToUp,
+                    nextLevel = nextLevel,
+                    index = index
+                )
+            }
         ),
         UpdateData(
             updatableObject = R.string.max_energy,
@@ -202,7 +232,15 @@ class GameViewModel : ViewModel() {
             updatableImage = R.drawable.battery_svgrepo_com,
             currentLevel = planet.value.levelMaxEnergy,
             nextLevel = nextLevel(level = planet.value.levelMaxEnergy),
-            isMaxLevel = isMaxLevel(level = planet.value.levelMaxEnergy)
+            isMaxLevel = isMaxLevel(level = planet.value.levelMaxEnergy),
+            requiredToUp = requiredToUp(level = planet.value.levelMaxEnergy),
+            onClick = { index, requiredToUp, nextLevel ->
+                upgradeMaxEnergy(
+                    requiredToUp = requiredToUp,
+                    nextLevel = nextLevel,
+                    index = index
+                )
+            }
         ),
         UpdateData(
             updatableObject = R.string.energy_per_second,
@@ -210,10 +248,80 @@ class GameViewModel : ViewModel() {
             updatableImage = R.drawable.battery_charge_alert_svgrepo_com,
             currentLevel = planet.value.levelEnergyPerSecond,
             nextLevel = nextLevel(level = planet.value.levelEnergyPerSecond),
-            isMaxLevel = isMaxLevel(level = planet.value.levelEnergyPerSecond)
+            isMaxLevel = isMaxLevel(level = planet.value.levelEnergyPerSecond),
+            requiredToUp = requiredToUp(level = planet.value.levelEnergyPerSecond),
+            onClick = { index, requiredToUp, nextLevel ->
+                upgradeEnergyPerSecond(
+                    requiredToUp = requiredToUp,
+                    nextLevel = nextLevel,
+                    index = index
+                )
+            }
         )
-    )
+    ))
+    val listOfUpdates
+        get() = _listOfUpdates
 
+    private fun upgradeCoinsPerTap(requiredToUp: Int, nextLevel: Int, index: Int) {
+        // here we don't have to require that our current coins more than need
+        // because we'll make a button disabled if any
+        // I do it just in case
+        if (planet.value.coins >= requiredToUp) {
+            val updatedCoins = planet.value.coins - requiredToUp
+            _planet.update { currentPlanet ->
+                currentPlanet.copy(levelCoinsPerTap = nextLevel, coins = updatedCoins)
+            }
+            updateDependentProperties()
+            _listOfUpdates.value[index] =
+                _listOfUpdates.value[index].updateUpgradeDataInTheList(level = planet.value.levelCoinsPerTap)
+        }
+    }
+
+    private fun upgradeCoinsPerSecond(requiredToUp: Int, nextLevel: Int, index: Int) {
+        // here we don't have to require that our current coins more than need
+        // because we'll make a button disabled if any
+        // I do it just in case
+        if (planet.value.coins >= requiredToUp) {
+            val updatedCoins = planet.value.coins - requiredToUp
+            _planet.update { currentPlanet ->
+                currentPlanet.copy(levelCoinsPerSecond = nextLevel, coins = updatedCoins)
+            }
+            updateDependentProperties()
+            _listOfUpdates.value[index] =
+                _listOfUpdates.value[index].updateUpgradeDataInTheList(level = planet.value.levelCoinsPerSecond)
+        }
+    }
+
+    private fun upgradeMaxEnergy(requiredToUp: Int, nextLevel: Int, index: Int) {
+        // here we don't have to require that our current coins more than need
+        // because we'll make a button disabled if any
+        // I do it just in case
+        if (planet.value.coins >= requiredToUp) {
+            val updatedCoins = planet.value.coins - requiredToUp
+            _planet.update { currentPlanet ->
+                currentPlanet.copy(levelMaxEnergy = nextLevel, coins = updatedCoins)
+            }
+            updateDependentProperties()
+            _listOfUpdates.value[index] =
+                _listOfUpdates.value[index].updateUpgradeDataInTheList(level = planet.value.levelMaxEnergy)
+        }
+    }
+
+    private fun upgradeEnergyPerSecond(requiredToUp: Int, nextLevel: Int, index: Int) {
+        // here we don't have to require that our current coins more than need
+        // because we'll make a button disabled if any
+        // I do it just in case
+        if (planet.value.coins >= requiredToUp) {
+            val updatedCoins = planet.value.coins - requiredToUp
+            _planet.update { currentPlanet ->
+                currentPlanet.copy(levelEnergyPerSecond = nextLevel, coins = updatedCoins)
+            }
+            updateDependentProperties()
+
+            _listOfUpdates.value[index] =
+                _listOfUpdates.value[index].updateUpgradeDataInTheList(level = planet.value.levelEnergyPerSecond)
+        }
+    }
 
     private fun energyRecovery() {
         _planet.apply {
@@ -258,5 +366,14 @@ class GameViewModel : ViewModel() {
                 coinIncrease()
             }
         }
+    }
+
+    private fun UpdateData.updateUpgradeDataInTheList(level: Int): UpdateData {
+        return this.copy(
+            currentLevel = level,
+            nextLevel = level + 1,
+            isMaxLevel = isMaxLevel(level = level),
+            requiredToUp = requiredToUp(level = level)
+        )
     }
 }

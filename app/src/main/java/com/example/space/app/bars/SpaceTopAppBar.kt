@@ -32,9 +32,6 @@ fun SpaceTopAppBar(
                 color = colorResource(id = color),
                 style = style,
                 modifier = Modifier
-//                    .fillMaxWidth()
-//                    .wrapContentWidth(align = Alignment.End)
-//                    .padding(end = 20.dp)
             )
         },
         navigationIcon = {
