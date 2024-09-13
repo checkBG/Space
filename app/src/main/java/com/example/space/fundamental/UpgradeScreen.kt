@@ -29,7 +29,7 @@ fun UpgradeScreen(
         UpgradeBackgroundScreen()
 
         LazyColumn {
-            items(items = )
+//            items(items = )
         }
     }
 }

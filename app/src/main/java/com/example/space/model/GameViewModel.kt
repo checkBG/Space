@@ -1,7 +1,6 @@
 package com.example.space.model
 
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.space.R
@@ -19,12 +18,13 @@ class GameViewModel : ViewModel() {
     val planet: StateFlow<Planet>
         get() = _planet.asStateFlow()
 
-    private var coinsPerTap: Int =
+    private var coinsPerTap: Progress.CoinsPerTap =
         calculateCoinsPerTap(level = planet.value.levelCoinsPerTap)
-    private var maxEnergy: Int = calculateMaxEnergy(level = planet.value.levelMaxEnergy)
-    private var energyPerSecond: Int =
+    private var maxEnergy: Progress.MaxEnergy =
+        calculateMaxEnergy(level = planet.value.levelMaxEnergy)
+    private var energyPerSecond: Progress.EnergyPerSecond =
         calculateEnergyPerSecond(level = planet.value.levelEnergyPerSecond)
-    private var coinsPerSecond: Int =
+    private var coinsPerSecond: Progress.CoinsPerSecond =
         calculateCoinsPerSecond(level = planet.value.levelCoinsPerSecond)
 
 
@@ -33,12 +33,12 @@ class GameViewModel : ViewModel() {
             coinsPerTap = calculateCoinsPerTap(level = levelCoinsPerTap)
             maxEnergy = calculateMaxEnergy(level = levelMaxEnergy)
             energyPerSecond = calculateEnergyPerSecond(level = levelEnergyPerSecond)
-            coinsPerSecond = calculateEnergyPerSecond(level = levelCoinsPerSecond)
+            coinsPerSecond = calculateCoinsPerSecond(level = levelCoinsPerSecond)
         }
     }
 
     private fun updateProgressPercentage(): Float {
-        return (planet.value.energy.toFloat() / maxEnergy.toFloat())
+        return (planet.value.energy.toFloat() / maxEnergy.value.toFloat())
     }
 
     private fun updateTextTopAppBar(): Int {
@@ -72,10 +72,10 @@ class GameViewModel : ViewModel() {
 
     fun updateCoinsForTap() {
         _planet.apply {
-            val currentCoins = value.coins + coinsPerTap
-            val currentEnergy = value.energy - coinsPerTap
+            val currentCoins = value.coins + coinsPerTap.value
+            val currentEnergy = value.energy - coinsPerTap.value
 
-            if (value.energy >= coinsPerTap) {
+            if (value.energy >= coinsPerTap.value) {
                 update { currentPlanet ->
                     currentPlanet.copy(
                         coins = currentCoins,
@@ -95,69 +95,77 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun calculateCoinsPerTap(level: Int): Int {
-        return when (level) {
-            1 -> 3
-            2 -> 5
-            3 -> 7
-            4 -> 9
-            5 -> 11
-            6 -> 13
-            7 -> 15
-            8 -> 17
-            9 -> 19
-            else -> 20
-        }
+    private fun calculateCoinsPerTap(level: Int): Progress.CoinsPerTap {
+        return Progress.CoinsPerTap(
+            value = when (level) {
+                1 -> 3
+                2 -> 5
+                3 -> 7
+                4 -> 9
+                5 -> 11
+                6 -> 13
+                7 -> 15
+                8 -> 17
+                9 -> 19
+                else -> 20
+            }
+        )
     }
 
-    private fun calculateMaxEnergy(level: Int): Int {
-        return when (level) {
-            1 -> 500
-            2 -> 1000
-            3 -> 1500
-            4 -> 2000
-            5 -> 2500
-            6 -> 3000
-            7 -> 3500
-            8 -> 4000
-            9 -> 4500
-            else -> 5000
-        }
+    private fun calculateMaxEnergy(level: Int): Progress.MaxEnergy {
+        return Progress.MaxEnergy(
+            value = when (level) {
+                1 -> 500
+                2 -> 1000
+                3 -> 1500
+                4 -> 2000
+                5 -> 2500
+                6 -> 3000
+                7 -> 3500
+                8 -> 4000
+                9 -> 4500
+                else -> 5000
+            }
+        )
     }
 
-    private fun calculateEnergyPerSecond(level: Int): Int {
-        return when (level) {
-            1 -> 3
-            2 -> 4
-            3 -> 5
-            4 -> 6
-            5 -> 7
-            6 -> 8
-            7 -> 9
-            8 -> 10
-            9 -> 11
-            else -> 12
-        }
+    private fun calculateEnergyPerSecond(level: Int): Progress.EnergyPerSecond {
+        return Progress.EnergyPerSecond(
+            value = when (level) {
+                1 -> 3
+                2 -> 4
+                3 -> 5
+                4 -> 6
+                5 -> 7
+                6 -> 8
+                7 -> 9
+                8 -> 10
+                9 -> 11
+                else -> 12
+            }
+        )
     }
 
-    private fun calculateCoinsPerSecond(level: Int): Int {
-        return when (level) {
-            1 -> 1
-            2 -> 1
-            3 -> 1
-            4 -> 2
-            5 -> 2
-            6 -> 2
-            7 -> 3
-            8 -> 3
-            9 -> 3
-            else -> 4
-        }
+    private fun calculateCoinsPerSecond(level: Int): Progress.CoinsPerSecond {
+        return Progress.CoinsPerSecond(
+            value = when (level) {
+                1 -> 1
+                2 -> 1
+                3 -> 1
+                4 -> 2
+                5 -> 2
+                6 -> 2
+                7 -> 3
+                8 -> 3
+                9 -> 3
+                else -> 4
+            }
+        )
     }
 
     private fun coinIncrease() {
         _planet.apply {
-            val updatedCoins = value.coins + coinsPerSecond
+            val updatedCoins = value.coins + coinsPerSecond.value
 
             update { currentPlanet ->
                 currentPlanet.copy(
@@ -171,10 +179,10 @@ class GameViewModel : ViewModel() {
     private fun energyRecovery() {
         _planet.apply {
             val increaseEnergy =
-                if ((value.energy + energyPerSecond) <= maxEnergy) {
-                    energyPerSecond
+                if ((value.energy + energyPerSecond.value) <= maxEnergy.value) {
+                    energyPerSecond.value
                 } else {
-                    maxEnergy - value.energy
+                    maxEnergy.value - value.energy
                 }
             val updatedEnergy = value.energy + increaseEnergy
 
@@ -189,9 +197,9 @@ class GameViewModel : ViewModel() {
     }
 
     private suspend fun checkEnergyStatus() {
-        if (planet.value.energy >= maxEnergy) {
+        if (planet.value.energy >= maxEnergy.value) {
             // Если энергия достигла максимального значения, ждем, пока она не станет меньше
-            while (planet.value.energy == maxEnergy) {
+            while (planet.value.energy == maxEnergy.value) {
                 delay(100)
             }
         }

@@ -46,6 +46,10 @@ class GameViewModelTest {
         assertEquals(R.string.pla_coin, viewModel.planetAppBar.intValue)
     }
 
+//    @Test gameViewModel_Upgrade_() {
+//
+//    }
+
     companion object {
         private const val COINS_PER_FIRST_TAP = 3
     }

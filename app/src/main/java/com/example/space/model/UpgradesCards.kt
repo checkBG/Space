@@ -14,10 +14,12 @@ data class UpdateData(
 //    val
 )
 
-interface CoinsPerTap { val level: Int }
+sealed class Progress(val value: Int) {
+    class CoinsPerTap(value: Int) : Progress(value = value)
 
-interface CoinsPerSecond { val level: Int }
+    class CoinsPerSecond(value: Int) : Progress(value = value)
 
-interface MaxEnergyLevel { val level: Int }
+    class MaxEnergy(value: Int) : Progress(value = value)
 
-interface EnergyPerSecond { val level: Int }
+    class EnergyPerSecond(value: Int) : Progress(value = value)
+}
