@@ -4,21 +4,17 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.space.R
 import com.example.space.gameViewModel
-
-//private val GameViewModel = GameViewModel()
-//private val planetTopAppBarStateFLow = mutableIntStateOf(gameViewModel.planetAppBar.intValue)
 
 sealed class BottomBarScreen(
     val route: String,
     @StringRes val topAppTitle: Int,
     @StringRes val bottomAppTitle: Int,
     @ColorRes val color: Int,
-    val icon: ImageVector
+    val icon: Any
 ) {
     object Planet : BottomBarScreen(
         route = Screens.Planet.name,
@@ -49,7 +45,7 @@ enum class Screens(
     @StringRes val topAppTitle: Int,
     @StringRes val bottomAppTitle: Int,
     @ColorRes val color: Int,
-    val icon: ImageVector
+    val icon: Any
 ) {
     Planet(
         topAppTitle = R.string.app_name, /* this parameter definitely should be initialized in MainScreen
@@ -61,8 +57,8 @@ because it always changes if count of coins become define amount initialized in 
     Upgrade(
         topAppTitle = gameViewModel.upgradeAppBar,
         bottomAppTitle = gameViewModel.upgradeBottomAppBar,
-        color = R.color.black,
-        icon = Icons.Filled.KeyboardArrowUp
+        color = R.color.turquoise,
+        icon = R.drawable.arrows_up
     ),
     Status(
         topAppTitle = gameViewModel.statusAppBar,

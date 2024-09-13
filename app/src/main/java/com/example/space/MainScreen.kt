@@ -5,11 +5,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -83,16 +88,33 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
+    val contentDescription = "Move to ${stringResource(id = screen.bottomAppTitle)}"
+
     this.NavigationBarItem(
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
         } == true,
+        alwaysShowLabel = false,
         onClick = { navController.navigate(screen.route) },
         icon = {
-            Icon(
-                screen.icon,
-                contentDescription = "Move to ${stringResource(id = screen.bottomAppTitle)}"
-            )
+            when (screen.icon) {
+                is ImageVector -> {
+                    Icon(
+                        imageVector = screen.icon,
+                        contentDescription = contentDescription
+                    )
+                }
+
+                else -> {
+                    Icon(
+                        painter = painterResource(id = screen.icon as Int),
+                        contentDescription = contentDescription
+                    )
+                }
+            }
         },
-        label = { Text(text = stringResource(id = screen.bottomAppTitle)) })
+        colors = NavigationBarItemDefaults.colors(
+            unselectedIconColor = Color.White, indicatorColor = colorResource(id = R.color.light_turquoise)
+        ),
+        label = { Text(text = stringResource(id = screen.bottomAppTitle), color = Color.White) })
 }

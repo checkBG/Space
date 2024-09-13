@@ -10,4 +10,6 @@
     <color name="persian_blue">#6600FF</color>
     <color name="sand">#FCDD76</color>
     <color name="sun">#ffc063</color>
+    <color name="turquoise">#00cccc</color>
+    <color name="light_turquoise">#b0e0e6</color>
 </resources>

@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,11 +41,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
+import com.example.space.ui.theme.SpaceTheme
 import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -217,4 +222,62 @@ fun SpaceButtonImageCenter(
                 interactionSource = remember { MutableInteractionSource() }
             )
     )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CountOfCoinsRowPreview() {
+    SpaceTheme(darkTheme = true) {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            CountOfCoinsRow(
+                currentCoins = 10,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SpaceImageCenterPreview() {
+    SpaceTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            SpaceButtonImageCenter(
+                onClick = { },
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SpaceBackgroundPreview() {
+    SpaceTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            SpaceBackground(modifier = Modifier.padding(innerPadding))
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SpaceAppPreview() {
+    SpaceTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            PlanetScreen(modifier = Modifier.padding(innerPadding), gameViewModel = viewModel())
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CustomProgressBarPreview() {
+    SpaceTheme {
+        Surface(
+            modifier = Modifier
+        ) {
+            CustomProgressBar()
+        }
+    }
 }
