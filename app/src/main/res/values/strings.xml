@@ -17,11 +17,11 @@
     <string name="coin_per_tap">Coin per tap</string>
     <string name="coin_per_tap_description">Upgrade the count of coins per tap to get more coins!</string>
     <string name="max_level_equals_null">You already have the max level of upgrade!</string>
-    <string name="coin_per_second">Coin per second</string>
+    <string name="coin_per_second">Coin per sec</string>
     <string name="coin_per_second_description">Upgrade the count of coins per second to get coins permanently every second!</string>
     <string name="max_energy">Max energy</string>
     <string name="max_energy_description">Upgrade your max amount of energy in order to have more count of taps!</string>
-    <string name="energy_per_second">Energy per second</string>
+    <string name="energy_per_second">Energy per sec</string>
     <string name="energy_per_second_description">Upgrade count of energy per second in order to recover your energy faster!</string>
     <string name="upgrade_button">Upgrade!</string>
     <string name="levels">Current level: %1d\nNext level: %2d</string>

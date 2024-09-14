@@ -179,7 +179,9 @@ class GameViewModel : ViewModel() {
     }
 
     private fun isMaxLevel(level: Int): Boolean = level in rangeOfLevels
-    private fun nextLevel(level: Int): Int? = if (level.inc() <= rangeOfLevels.last()) level.inc() else null
+    private fun nextLevel(level: Int): Int? =
+        if (level.inc() in rangeOfLevels) level.inc() else null
+
     private fun requiredToUp(level: Int): Int = when (level) {
         1 -> 100
         2 -> 500
@@ -371,7 +373,7 @@ class GameViewModel : ViewModel() {
     private fun UpdateData.updateUpgradeDataInTheList(level: Int): UpdateData {
         return this.copy(
             currentLevel = level,
-            nextLevel = level + 1,
+            nextLevel = nextLevel(level = level),
             isMaxLevel = isMaxLevel(level = level),
             requiredToUp = requiredToUp(level = level)
         )
