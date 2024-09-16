@@ -5,9 +5,16 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.space.R
 import com.example.space.gameViewModel
+
+val listOfScreens: List<BottomBarScreen> by lazy {
+    listOf(
+        BottomBarScreen.Planet,
+        BottomBarScreen.Upgrade,
+        BottomBarScreen.Status
+    )
+}
 
 sealed class BottomBarScreen(
     val route: String,
@@ -16,7 +23,7 @@ sealed class BottomBarScreen(
     @ColorRes val color: Int,
     val icon: Any
 ) {
-    object Planet : BottomBarScreen(
+    data object Planet : BottomBarScreen(
         route = Screens.Planet.name,
         topAppTitle = Screens.Planet.topAppTitle,
         bottomAppTitle = Screens.Planet.bottomAppTitle,
@@ -24,7 +31,7 @@ sealed class BottomBarScreen(
         icon = Screens.Planet.icon
     )
 
-    object Upgrade : BottomBarScreen(
+    data object Upgrade : BottomBarScreen(
         route = Screens.Upgrade.name,
         topAppTitle = Screens.Upgrade.topAppTitle,
         bottomAppTitle = Screens.Upgrade.bottomAppTitle,
@@ -32,7 +39,7 @@ sealed class BottomBarScreen(
         icon = Screens.Upgrade.icon
     )
 
-    object Status : BottomBarScreen(
+    data object Status : BottomBarScreen(
         route = Screens.Status.name,
         topAppTitle = Screens.Status.topAppTitle,
         bottomAppTitle = Screens.Status.bottomAppTitle,
