@@ -66,6 +66,9 @@ class GameViewModel : ViewModel() {
     val upgradeAppBar = R.string.upgrade
     val upgradeBottomAppBar = R.string.upgrade_bottom
 
+    val shopAppBar = R.string.shop
+    val shopBottomAppBar = R.string.shop_bottom
+
     val statusAppBar = R.string.status
     val statusBottomAppBar = R.string.status_bottom
 

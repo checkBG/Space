@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.space.fundamental.PlanetScreen
+import com.example.space.fundamental.ShopScreen
 import com.example.space.fundamental.StatusScreen
 import com.example.space.fundamental.UpgradeScreen
 import com.example.space.model.GameViewModel
@@ -30,8 +31,12 @@ fun BottomNavGraph(
             UpgradeScreen(gameViewModel = gameViewModel, modifier = modifier)
         }
 
+        composable(route = BottomBarScreen.Shop.route) {
+            ShopScreen(gameViewModel = gameViewModel)
+        }
+
         composable(route = BottomBarScreen.Status.route) {
-            StatusScreen(gameViewModel = gameViewModel)
+            StatusScreen(gameViewModel = gameViewModel, modifier = modifier)
         }
     }
 }

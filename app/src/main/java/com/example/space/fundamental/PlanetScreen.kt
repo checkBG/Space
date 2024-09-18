@@ -76,7 +76,7 @@ fun PlanetScreen(
 }
 
 @Composable
-fun CustomProgressBar(
+private fun CustomProgressBar(
     modifier: Modifier = Modifier,
     progressPercentage: Float = 1.0f
 ) {

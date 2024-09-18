@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.compose.material3.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.compose.v280)
+    implementation(libs.animated.navigation.bar)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
