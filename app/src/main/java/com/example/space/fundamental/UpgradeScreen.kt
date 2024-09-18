@@ -74,7 +74,7 @@ fun UpgradeListLazyColumn(
 @Composable
 fun UpgradeBackgroundScreen() {
     Image(
-        painter = painterResource(id = R.drawable.backgroundforupdatescreen),
+        painter = painterResource(id = R.drawable.spacebackgroundforupgradescreen5120x2880),
         contentDescription = null,
         contentScale = ContentScale.FillBounds,
         modifier = Modifier.fillMaxSize()

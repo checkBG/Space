@@ -179,7 +179,7 @@ fun CountOfCoinsRow(
 @Composable
 fun SpaceBackground(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.space_background),
+        painter = painterResource(id = R.drawable.spaceful),
         contentDescription = null,
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Crop

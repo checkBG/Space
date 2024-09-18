@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -18,6 +20,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
@@ -28,11 +31,13 @@ fun StatusScreen(
     modifier: Modifier = Modifier,
     gameViewModel: GameViewModel
 ) {
+    val gamePlanetState by gameViewModel.planet.collectAsState()
+
     Box {
         StatusScreenBackground()
 
 
-        ProgressBar()
+        ProgressBar(modifier = modifier, currentCoins = gamePlanetState.coins, nextCoins = 100) // change later!!
     }
 }
 
@@ -47,37 +52,46 @@ fun StatusScreenBackground(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProgressBar(modifier: Modifier = Modifier) {
+fun ProgressBar(modifier: Modifier = Modifier, currentCoins: Int, nextCoins: Int) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
 
-    val screenWidthPx = with(LocalDensity.current) { screenWidthDp. }
-    val screenHeightPx = with(LocalDensity.current) { screenHeightDp.toPx() }
+    val screenWidthPx = with(LocalDensity.current) { screenWidthDp.dp.toPx() }
+    val screenHeightPx = with(LocalDensity.current) { screenHeightDp.dp.toPx() }
 
+    val percentage = currentCoins.toFloat() / nextCoins.toFloat()
+    val widthOfRectForPermanentConfiguration = if (screenWidthDp <= 500) 700f else 1000f
+    val widthOfRect = (if (screenWidthDp <= 500) 700f else 1000f) * percentage
 
-    val startPositionForArrow = Offset(x = 20f, y = 50f)
-    val startPositionForRect = Offset(x = 35f, 93f)
+    val startPositionOfAllProgressBarWidth = if (screenWidthDp <= 500) screenWidthPx / 5f else screenWidthPx / 3f
+    val startPositionOfAllProgressBarHeight = if (screenHeightDp <= 2000) screenHeightPx / 15f else screenHeightPx / 25f
+    val startPositionForArrow = Offset(
+        x = startPositionOfAllProgressBarWidth + widthOfRect - 30f,
+        y = startPositionOfAllProgressBarHeight
+    )
+    val startPositionForRect = Offset(x = startPositionOfAllProgressBarWidth, startPositionOfAllProgressBarHeight + 43f)
+
 
     Canvas(modifier = modifier.fillMaxSize()) {
         drawRoundRect( // is the background of the rect if the progress less than 100%
             color = Color.LightGray,
             topLeft = startPositionForRect,
-            size = Size(1000f, 15f),
+            size = Size(widthOfRectForPermanentConfiguration, 15f),
             cornerRadius = CornerRadius(50f)
         )
 
         drawRoundRect( // is the second rect of the progress. Has been created emphasizing the main rect
             brush = Brush.linearGradient(listOf(Color(0xFF6600FF), Color(0xFF9400D3))),
             topLeft = Offset(startPositionForRect.x - 0.5f, startPositionForRect.y - 0.5f),
-            size = Size(1001f, 16f),
+            size = Size(widthOfRect + 1f, 16f),
             cornerRadius = CornerRadius(50f)
         )
 
         drawRoundRect( // is the main rect of the progress
             brush = Brush.linearGradient(listOf(Color(0xFFECE086), Color(0xFFAA7711))),
             topLeft = startPositionForRect,
-            size = Size(1000f, 15f),
+            size = Size(widthOfRect, 15f),
             cornerRadius = CornerRadius(50f)
         )
 
@@ -138,7 +152,7 @@ fun ProgressBar(modifier: Modifier = Modifier) {
 @Composable
 fun DrawArrowPreview() {
     SpaceTheme {
-        ProgressBar()
+        ProgressBar(currentCoins = 10, nextCoins = 100)
     }
 }
 
