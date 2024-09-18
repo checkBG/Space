@@ -1,5 +1,6 @@
 package com.example.space.fundamental
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -37,7 +38,12 @@ fun StatusScreen(
         StatusScreenBackground()
 
 
-        ProgressBar(modifier = modifier, currentCoins = gamePlanetState.coins, nextCoins = 100) // change later!!
+        ProgressBar(
+            modifier = modifier,
+            currentCoins = gamePlanetState.coins,
+            nextCoins = 100,
+            zodiacSign = 0
+        ) // change later!!
     }
 }
 
@@ -52,7 +58,12 @@ fun StatusScreenBackground(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProgressBar(modifier: Modifier = Modifier, currentCoins: Int, nextCoins: Int) {
+fun ProgressBar(
+    modifier: Modifier = Modifier,
+    currentCoins: Int,
+    nextCoins: Int,
+    @StringRes zodiacSign: Int
+) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
@@ -64,13 +75,16 @@ fun ProgressBar(modifier: Modifier = Modifier, currentCoins: Int, nextCoins: Int
     val widthOfRectForPermanentConfiguration = if (screenWidthDp <= 500) 700f else 1000f
     val widthOfRect = (if (screenWidthDp <= 500) 700f else 1000f) * percentage
 
-    val startPositionOfAllProgressBarWidth = if (screenWidthDp <= 500) screenWidthPx / 5f else screenWidthPx / 3f
-    val startPositionOfAllProgressBarHeight = if (screenHeightDp <= 2000) screenHeightPx / 15f else screenHeightPx / 25f
+    val startPositionOfAllProgressBarWidth =
+        if (screenWidthDp <= 500) screenWidthPx / 5f else screenWidthPx / 3f
+    val startPositionOfAllProgressBarHeight =
+        if (screenHeightDp <= 2000) screenHeightPx / 15f else screenHeightPx / 25f
     val startPositionForArrow = Offset(
         x = startPositionOfAllProgressBarWidth + widthOfRect - 30f,
         y = startPositionOfAllProgressBarHeight
     )
-    val startPositionForRect = Offset(x = startPositionOfAllProgressBarWidth, startPositionOfAllProgressBarHeight + 43f)
+    val startPositionForRect =
+        Offset(x = startPositionOfAllProgressBarWidth, startPositionOfAllProgressBarHeight + 43f)
 
 
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -152,7 +166,7 @@ fun ProgressBar(modifier: Modifier = Modifier, currentCoins: Int, nextCoins: Int
 @Composable
 fun DrawArrowPreview() {
     SpaceTheme {
-        ProgressBar(currentCoins = 10, nextCoins = 100)
+        ProgressBar(currentCoins = 10, nextCoins = 100, zodiacSign = 0)
     }
 }
 

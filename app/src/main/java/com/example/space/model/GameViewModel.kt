@@ -21,21 +21,21 @@ class GameViewModel : ViewModel() {
         get() = _planet.asStateFlow()
 
     private var coinsPerTap: Progress.CoinsPerTap =
-        calculateCoinsPerTap(level = planet.value.levelCoinsPerTap)
+        Progress.CoinsPerTap.progressUpdate(level = planet.value.levelCoinsPerTap)
     private var maxEnergy: Progress.MaxEnergy =
-        calculateMaxEnergy(level = planet.value.levelMaxEnergy)
+        Progress.MaxEnergy.progressUpdate(level = planet.value.levelMaxEnergy)
     private var energyPerSecond: Progress.EnergyPerSecond =
-        calculateEnergyPerSecond(level = planet.value.levelEnergyPerSecond)
+        Progress.EnergyPerSecond.progressUpdate(level = planet.value.levelEnergyPerSecond)
     private var coinsPerSecond: Progress.CoinsPerSecond =
-        calculateCoinsPerSecond(level = planet.value.levelCoinsPerSecond)
+        Progress.CoinsPerSecond.progressUpdate(level = planet.value.levelCoinsPerSecond)
 
 
     private fun updateDependentProperties() {
         planet.value.apply {
-            coinsPerTap = calculateCoinsPerTap(level = levelCoinsPerTap)
-            maxEnergy = calculateMaxEnergy(level = levelMaxEnergy)
-            energyPerSecond = calculateEnergyPerSecond(level = levelEnergyPerSecond)
-            coinsPerSecond = calculateCoinsPerSecond(level = levelCoinsPerSecond)
+            coinsPerTap = Progress.CoinsPerTap.progressUpdate(level = levelCoinsPerTap)
+            maxEnergy = Progress.MaxEnergy.progressUpdate(level = levelMaxEnergy)
+            energyPerSecond = Progress.EnergyPerSecond.progressUpdate(level = levelEnergyPerSecond)
+            coinsPerSecond = Progress.CoinsPerSecond.progressUpdate(level = levelCoinsPerSecond)
         }
     }
 
@@ -100,74 +100,6 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun calculateCoinsPerTap(level: Int): Progress.CoinsPerTap {
-        return Progress.CoinsPerTap(
-            value = when (level) {
-                1 -> 3
-                2 -> 5
-                3 -> 7
-                4 -> 9
-                5 -> 11
-                6 -> 13
-                7 -> 15
-                8 -> 17
-                9 -> 19
-                else -> 20
-            }
-        )
-    }
-
-    private fun calculateMaxEnergy(level: Int): Progress.MaxEnergy {
-        return Progress.MaxEnergy(
-            value = when (level) {
-                1 -> 500
-                2 -> 1000
-                3 -> 1500
-                4 -> 2000
-                5 -> 2500
-                6 -> 3000
-                7 -> 3500
-                8 -> 4000
-                9 -> 4500
-                else -> 5000
-            }
-        )
-    }
-
-    private fun calculateEnergyPerSecond(level: Int): Progress.EnergyPerSecond {
-        return Progress.EnergyPerSecond(
-            value = when (level) {
-                1 -> 3
-                2 -> 4
-                3 -> 5
-                4 -> 6
-                5 -> 7
-                6 -> 8
-                7 -> 9
-                8 -> 10
-                9 -> 11
-                else -> 12
-            }
-        )
-    }
-
-    private fun calculateCoinsPerSecond(level: Int): Progress.CoinsPerSecond {
-        return Progress.CoinsPerSecond(
-            value = when (level) {
-                1 -> 1
-                2 -> 1
-                3 -> 1
-                4 -> 2
-                5 -> 2
-                6 -> 2
-                7 -> 3
-                8 -> 3
-                9 -> 3
-                else -> 4
-            }
-        )
-    }
-
     private fun coinIncrease() {
         _planet.apply {
             val updatedCoins = value.coins + coinsPerSecond.value
@@ -185,19 +117,6 @@ class GameViewModel : ViewModel() {
     private fun nextLevel(level: Int): Int? =
         if (level.inc() in rangeOfLevels) level.inc() else null
 
-    private fun requiredToUp(level: Int): Int = when (level) {
-        1 -> 100
-        2 -> 500
-        3 -> 1000
-        4 -> 2000
-        5 -> 4000
-        6 -> 10_000
-        7 -> 25_000
-        8 -> 35_000
-        9 -> 50_000
-        else -> 100_000
-    }
-
     private val _listOfUpdates = MutableStateFlow(mutableListOf(
         UpdateData(
             updatableObject = R.string.coin_per_tap,
@@ -206,7 +125,7 @@ class GameViewModel : ViewModel() {
             currentLevel = planet.value.levelCoinsPerTap,
             nextLevel = nextLevel(level = planet.value.levelCoinsPerTap),
             isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerTap),
-            requiredToUp = requiredToUp(level = planet.value.levelCoinsPerTap),
+            requiredToUp = Progress.requiredToUp(level = planet.value.levelCoinsPerTap),
             onClick = { index, requiredToUp, nextLevel ->
                 upgradeCoinsPerTap(
                     requiredToUp = requiredToUp,
@@ -222,7 +141,7 @@ class GameViewModel : ViewModel() {
             currentLevel = planet.value.levelCoinsPerSecond,
             nextLevel = nextLevel(level = planet.value.levelCoinsPerSecond),
             isMaxLevel = isMaxLevel(level = planet.value.levelCoinsPerSecond),
-            requiredToUp = requiredToUp(level = planet.value.levelCoinsPerSecond),
+            requiredToUp = Progress.requiredToUp(level = planet.value.levelCoinsPerSecond),
             onClick = { index, requiredToUp, nextLevel ->
                 upgradeCoinsPerSecond(
                     requiredToUp = requiredToUp,
@@ -238,7 +157,7 @@ class GameViewModel : ViewModel() {
             currentLevel = planet.value.levelMaxEnergy,
             nextLevel = nextLevel(level = planet.value.levelMaxEnergy),
             isMaxLevel = isMaxLevel(level = planet.value.levelMaxEnergy),
-            requiredToUp = requiredToUp(level = planet.value.levelMaxEnergy),
+            requiredToUp = Progress.requiredToUp(level = planet.value.levelMaxEnergy),
             onClick = { index, requiredToUp, nextLevel ->
                 upgradeMaxEnergy(
                     requiredToUp = requiredToUp,
@@ -254,7 +173,7 @@ class GameViewModel : ViewModel() {
             currentLevel = planet.value.levelEnergyPerSecond,
             nextLevel = nextLevel(level = planet.value.levelEnergyPerSecond),
             isMaxLevel = isMaxLevel(level = planet.value.levelEnergyPerSecond),
-            requiredToUp = requiredToUp(level = planet.value.levelEnergyPerSecond),
+            requiredToUp = Progress.requiredToUp(level = planet.value.levelEnergyPerSecond),
             onClick = { index, requiredToUp, nextLevel ->
                 upgradeEnergyPerSecond(
                     requiredToUp = requiredToUp,
@@ -350,7 +269,7 @@ class GameViewModel : ViewModel() {
 
     private suspend fun checkEnergyStatus() {
         if (planet.value.energy >= maxEnergy.value) {
-            // Если энергия достигла максимального значения, ждем, пока она не станет меньше
+            // if energy reach the max value, we're waiting until it'll be got less
             while (planet.value.energy == maxEnergy.value) {
                 delay(100)
             }
@@ -378,7 +297,7 @@ class GameViewModel : ViewModel() {
             currentLevel = level,
             nextLevel = nextLevel(level = level),
             isMaxLevel = isMaxLevel(level = level),
-            requiredToUp = requiredToUp(level = level)
+            requiredToUp = Progress.requiredToUp(level = level)
         )
     }
 }
