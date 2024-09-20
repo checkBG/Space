@@ -2,6 +2,8 @@ package com.example.space.fundamental
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -13,9 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -34,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
-import com.example.space.Utils.getColor
+import com.example.space.utils.getColor
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
 
@@ -53,9 +52,9 @@ fun StatusScreen(
         ProgressBar(
             modifier = modifier,
             currentCoins = gamePlanetState.coins,
-            nextCoins = zodiacState.coinsToUpgrade,
+            nextCoins = zodiacState.requireCoins,
             zodiacSign = zodiacState.zodiacSign
-        ) // change later!!
+        )
     }
 }
 
@@ -84,8 +83,11 @@ fun ProgressBar(
     val screenWidthPx = with(LocalDensity.current) { screenWidthDp.dp.toPx() }
     val screenHeightPx = with(LocalDensity.current) { screenHeightDp.dp.toPx() }
 
-    var percentage by rememberSaveable { mutableFloatStateOf(0f) }
-    percentage = currentCoins.toFloat() / nextCoins.toFloat()
+    val percentage by animateFloatAsState(
+        targetValue = currentCoins.toFloat() / nextCoins.toFloat(),
+        animationSpec = tween(300),
+        label = "floatState"
+    )
     val widthOfRectForPermanentConfiguration = if (screenWidthDp <= 500) 700f else 1000f
     val widthOfRect = (if (screenWidthDp <= 500) 700f else 1000f) * percentage
 

@@ -19,10 +19,13 @@ object Zodiac {
         Pisces()
     )
 
-    fun getRightZodiacSign(currentCountOfCoins: Int): ZodiacSign {
-        var gotZodiacSign: ZodiacSign = Aries()
+    fun getRightZodiacSign(
+        currentCountOfCoins: Int,
+        currentZodiacSign: ZodiacSign? = null
+    ): ZodiacSign {
+        var gotZodiacSign: ZodiacSign = currentZodiacSign ?: Aries()
         zodiacs.forEach { zodiac ->
-            if (zodiac.coinsToUpgrade <= currentCountOfCoins) {
+            if ((zodiac.coinsToUpdate <= currentCountOfCoins) && ((currentZodiacSign?.coinsToUpdate ?: Aries().coinsToUpdate) <= zodiac.coinsToUpdate)) {
                 gotZodiacSign = zodiac
             }
         }
@@ -33,83 +36,145 @@ object Zodiac {
 
 abstract class ZodiacSign(
     @StringRes val zodiacSign: Int,
-    val coinsToUpgrade: Int
+    val requireCoins: Int,
+    val coinsToUpdate: Int
 )
 
 class Aries(
     @StringRes zodiacSign: Int = ZodiacsEnum.Aries.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Aries.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Aries.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Aries.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Taurus(
     @StringRes zodiacSign: Int = ZodiacsEnum.Taurus.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Taurus.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Taurus.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Taurus.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Gemini(
     @StringRes zodiacSign: Int = ZodiacsEnum.Gemini.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Gemini.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Gemini.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Gemini.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Cancer(
     @StringRes zodiacSign: Int = ZodiacsEnum.Cancer.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Cancer.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Cancer.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Cancer.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Leo(
     @StringRes zodiacSign: Int = ZodiacsEnum.Leo.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Leo.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Leo.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Leo.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Virgo(
     @StringRes zodiacSign: Int = ZodiacsEnum.Virgo.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Virgo.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Virgo.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Virgo.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Libra(
     @StringRes zodiacSign: Int = ZodiacsEnum.Libra.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Libra.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Libra.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Libra.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Scorpio(
     @StringRes zodiacSign: Int = ZodiacsEnum.Scorpio.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Scorpio.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Scorpio.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Scorpio.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Sagittarius(
     @StringRes zodiacSign: Int = ZodiacsEnum.Sagittarius.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Sagittarius.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Sagittarius.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Sagittarius.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Capricorn(
     @StringRes zodiacSign: Int = ZodiacsEnum.Capricorn.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Capricorn.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Capricorn.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Capricorn.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Aquarius(
     @StringRes zodiacSign: Int = ZodiacsEnum.Aquarius.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Aquarius.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Aquarius.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Aquarius.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 class Pisces(
     @StringRes zodiacSign: Int = ZodiacsEnum.Pisces.zodiacSign,
-    coinsToUpgrade: Int = ZodiacsEnum.Pisces.coinsToUpgrade
-) : ZodiacSign(zodiacSign, coinsToUpgrade)
+    requireCoins: Int = ZodiacsEnum.Pisces.requireCoins,
+    coinsToUpdate: Int = ZodiacsEnum.Pisces.coinsToUpdate
+) : ZodiacSign(zodiacSign, requireCoins, coinsToUpdate)
 
 enum class ZodiacsEnum(
     @StringRes val zodiacSign: Int,
-    val coinsToUpgrade: Int
+    val requireCoins: Int,
+    val coinsToUpdate: Int
 ) {
-    Aries(zodiacSign = R.string.zodiac_sign_aries, coinsToUpgrade = 100),
-    Taurus(zodiacSign = R.string.zodiac_sign_taurus, coinsToUpgrade = 1000),
-    Gemini(zodiacSign = R.string.zodiac_sign_gemini, coinsToUpgrade = 5000),
-    Cancer(zodiacSign = R.string.zodiac_sign_cancer, coinsToUpgrade = 10000),
-    Leo(zodiacSign = R.string.zodiac_sign_leo, coinsToUpgrade = 15000),
-    Virgo(zodiacSign = R.string.zodiac_sign_virgo, coinsToUpgrade = 25000),
-    Libra(zodiacSign = R.string.zodiac_sign_libra, coinsToUpgrade = 100_000),
-    Scorpio(zodiacSign = R.string.zodiac_sign_scorpio, coinsToUpgrade = 300_000),
-    Sagittarius(zodiacSign = R.string.zodiac_sign_sagittarius, coinsToUpgrade = 1_000_000),
-    Capricorn(zodiacSign = R.string.zodiac_sign_capricorn, coinsToUpgrade = 10_000_000),
-    Aquarius(zodiacSign = R.string.zodiac_sign_aquarius, coinsToUpgrade = 100_000_000),
-    Pisces(zodiacSign = R.string.zodiac_sign_pisces, coinsToUpgrade = 1_000_000_000),
+    Aries(
+        zodiacSign = R.string.zodiac_sign_aries,
+        requireCoins = 100,
+        coinsToUpdate = 0
+    ),
+    Taurus(
+        zodiacSign = R.string.zodiac_sign_taurus,
+        requireCoins = 1000,
+        coinsToUpdate = 100
+    ),
+    Gemini(
+        zodiacSign = R.string.zodiac_sign_gemini,
+        requireCoins = 5000,
+        coinsToUpdate = 1000
+    ),
+    Cancer(
+        zodiacSign = R.string.zodiac_sign_cancer,
+        requireCoins = 10000,
+        coinsToUpdate = 5000
+    ),
+    Leo(
+        zodiacSign = R.string.zodiac_sign_leo,
+        requireCoins = 15000,
+        coinsToUpdate = 10000
+    ),
+    Virgo(
+        zodiacSign = R.string.zodiac_sign_virgo,
+        requireCoins = 25000,
+        coinsToUpdate = 15000
+    ),
+    Libra(
+        zodiacSign = R.string.zodiac_sign_libra,
+        requireCoins = 100_000,
+        coinsToUpdate = 25000
+    ),
+    Scorpio(
+        zodiacSign = R.string.zodiac_sign_scorpio,
+        requireCoins = 250_000,
+        coinsToUpdate = 100_000
+    ),
+    Sagittarius(
+        zodiacSign = R.string.zodiac_sign_sagittarius,
+        requireCoins = 1_000_000,
+        coinsToUpdate = 250_000
+    ),
+    Capricorn(
+        zodiacSign = R.string.zodiac_sign_capricorn,
+        requireCoins = 10_000_000,
+        coinsToUpdate = 1_000_000
+    ),
+    Aquarius(
+        zodiacSign = R.string.zodiac_sign_aquarius,
+        requireCoins = 100_000_000,
+        coinsToUpdate = 10_000_000
+    ),
+    Pisces(
+        zodiacSign = R.string.zodiac_sign_pisces,
+        requireCoins = 1_000_000_000,
+        coinsToUpdate = 100_000_000
+    )
 }

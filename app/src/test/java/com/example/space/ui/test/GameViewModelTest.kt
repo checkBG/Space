@@ -57,7 +57,7 @@ class GameViewModelTest {
     fun zodiac_GetGemini() {
         val expectedZodiac = Gemini()
 
-        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpgrade)
+        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpdate)
         assertTrue(gotZodiac is Gemini)
     }
 
@@ -65,7 +65,7 @@ class GameViewModelTest {
     fun zodiac_GetGemini_lessThanNeed() {
         val expectedZodiac = Gemini()
 
-        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpgrade - 100)
+        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpdate - 100)
         assertFalse(gotZodiac is Gemini)
     }
 
@@ -73,7 +73,7 @@ class GameViewModelTest {
     fun zodiac_GetGemini_moreThanNeed() {
         val expectedZodiac = Gemini()
 
-        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpgrade + 100)
+        val gotZodiac = Zodiac.getRightZodiacSign(expectedZodiac.coinsToUpdate + 100)
         assertTrue(gotZodiac is Gemini)
     }
 

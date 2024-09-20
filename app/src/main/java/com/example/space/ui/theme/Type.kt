@@ -36,7 +36,8 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = fascinate_inline_regular,
         fontWeight = FontWeight.Normal,
-        fontSize = 35.sp
+        fontSize = 35.sp,
+        color = Color.White
     ),
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,

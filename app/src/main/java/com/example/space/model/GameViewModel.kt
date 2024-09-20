@@ -101,7 +101,7 @@ class GameViewModel : ViewModel() {
                     )
                 }
             }
-            _zodiac.value = Zodiac.getRightZodiacSign(updatedCoins)
+            _zodiac.value = Zodiac.getRightZodiacSign(currentCountOfCoins = updatedCoins, currentZodiacSign = zodiac.value)
             planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
         }
@@ -116,7 +116,7 @@ class GameViewModel : ViewModel() {
                     coins = updatedCoins
                 )
             }
-            _zodiac.value = Zodiac.getRightZodiacSign(updatedCoins)
+            _zodiac.value = Zodiac.getRightZodiacSign(currentCountOfCoins = updatedCoins, currentZodiacSign = zodiac.value)
             planetAppBar.intValue = updateTextTopAppBar()
         }
     }
