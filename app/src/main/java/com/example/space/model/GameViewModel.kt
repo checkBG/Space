@@ -15,11 +15,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 val rangeOfLevels = 1..10
+val maxLevel = rangeOfLevels.last()
 
 class GameViewModel : ViewModel() {
     private val _planet = MutableStateFlow(Planet.initPlanet())
     val planet: StateFlow<Planet>
         get() = _planet.asStateFlow()
+
+    private val _achieved = MutableStateFlow(Status())
+    val achieved: StateFlow<Status>
+        get() = _achieved.asStateFlow()
 
     private val _zodiac =
         MutableStateFlow(Zodiac.getRightZodiacSign(currentCountOfCoins = planet.value.coins))
@@ -101,7 +106,10 @@ class GameViewModel : ViewModel() {
                     )
                 }
             }
-            _zodiac.value = Zodiac.getRightZodiacSign(currentCountOfCoins = updatedCoins, currentZodiacSign = zodiac.value)
+            _zodiac.value = Zodiac.getRightZodiacSign(
+                currentCountOfCoins = updatedCoins,
+                currentZodiacSign = zodiac.value
+            )
             planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
         }
@@ -116,7 +124,10 @@ class GameViewModel : ViewModel() {
                     coins = updatedCoins
                 )
             }
-            _zodiac.value = Zodiac.getRightZodiacSign(currentCountOfCoins = updatedCoins, currentZodiacSign = zodiac.value)
+            _zodiac.value = Zodiac.getRightZodiacSign(
+                currentCountOfCoins = updatedCoins,
+                currentZodiacSign = zodiac.value
+            )
             planetAppBar.intValue = updateTextTopAppBar()
         }
     }
@@ -194,6 +205,20 @@ class GameViewModel : ViewModel() {
     val listOfUpdates
         get() = _listOfUpdates
 
+    private val _listOfAchievements = MutableStateFlow(
+        mutableListOf<Achievement>(
+            Achievement( // require taps on the screen
+                requirement = 10000,
+                achievement =,
+                reward =,
+                nameOfAchievement =,
+                descriptionOfAchievement =,
+                imageOfAchievement =,
+                isCompleted = false
+            )
+        )
+    )
+
     private fun upgradeProgress(requiredToUp: Int, nextLevel: Int, index: Int) {
         val updatedProgress = _listOfUpdates.value[index]
 
@@ -204,18 +229,18 @@ class GameViewModel : ViewModel() {
                     currentPlanet.copy(
                         coins = updatedCoins,
                         levelMaxEnergy = if (this.updateData == UpgradeCards.MaxEnergy) this.nextLevel
-                            ?: 10 else currentPlanet.levelMaxEnergy,
+                            ?: maxLevel else currentPlanet.levelMaxEnergy,
                         levelCoinsPerTap = if (this.updateData == UpgradeCards.CoinsPerTap) this.nextLevel
-                            ?: 10 else currentPlanet.levelCoinsPerTap,
+                            ?: maxLevel else currentPlanet.levelCoinsPerTap,
                         levelCoinsPerSecond = if (this.updateData == UpgradeCards.CoinsPerSecond) this.nextLevel
-                            ?: 10 else currentPlanet.levelCoinsPerSecond,
+                            ?: maxLevel else currentPlanet.levelCoinsPerSecond,
                         levelEnergyPerSecond = if (this.updateData == UpgradeCards.EnergyPerSecond) this.nextLevel
-                            ?: 10 else currentPlanet.levelEnergyPerSecond,
+                            ?: maxLevel else currentPlanet.levelEnergyPerSecond,
                     )
                 }
                 updateDependentProperties()
                 _listOfUpdates.value[index] =
-                    this.updateUpgradeDataInTheList(level = this.nextLevel ?: 10)
+                    this.updateUpgradeDataInTheList(level = this.nextLevel ?: maxLevel)
             }
         }
     }
