@@ -28,18 +28,16 @@
     <string name="upgrade_button">Upgrade!</string>
     <string name="levels">Current level: %1d\nNext level: %2d</string>
     <string name="require">Require: %1d/%2d</string>
-    <string-array name="zodiac_signs">
-        <item>Aries</item>
-        <item>Taurus</item>
-        <item>Gemini</item>
-        <item>Cancer</item>
-        <item>Leo</item>
-        <item>Virgo</item>
-        <item>Libra</item>
-        <item>Scorpio</item>
-        <item>Sagittarius</item>
-        <item>Capricorn</item>
-        <item>Aquarius</item>
-        <item>Pisces</item>
-    </string-array>
+    <string name="zodiac_sign_aries">Aries</string>
+    <string name="zodiac_sign_taurus">Taurus</string>
+    <string name="zodiac_sign_gemini">Gemini</string>
+    <string name="zodiac_sign_cancer">Cancer</string>
+    <string name="zodiac_sign_leo">Leo</string>
+    <string name="zodiac_sign_virgo">Virgo</string>
+    <string name="zodiac_sign_libra">Libra</string>
+    <string name="zodiac_sign_scorpio">Scorpio</string>
+    <string name="zodiac_sign_sagittarius">Sagittarius</string>
+    <string name="zodiac_sign_capricorn">Capricorn</string>
+    <string name="zodiac_sign_aquarius">Aquarius</string>
+    <string name="zodiac_sign_pisces">Pisces</string>
 </resources>

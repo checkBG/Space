@@ -21,6 +21,11 @@ class GameViewModel : ViewModel() {
     val planet: StateFlow<Planet>
         get() = _planet.asStateFlow()
 
+    private val _zodiac =
+        MutableStateFlow(Zodiac.getRightZodiacSign(currentCountOfCoins = planet.value.coins))
+    val zodiac: StateFlow<ZodiacSign>
+        get() = _zodiac.asStateFlow()
+
     private var coinsPerTap: Progress.CoinsPerTap =
         Progress.CoinsPerTap.progressUpdate(level = planet.value.levelCoinsPerTap)
     private var maxEnergy: Progress.MaxEnergy =
@@ -78,13 +83,13 @@ class GameViewModel : ViewModel() {
 
     fun updateCoinsForTap() {
         _planet.apply {
-            val currentCoins = value.coins + coinsPerTap.value
+            val updatedCoins = value.coins + coinsPerTap.value
             val currentEnergy = value.energy - coinsPerTap.value
 
             if (value.energy >= coinsPerTap.value) {
                 update { currentPlanet ->
                     currentPlanet.copy(
-                        coins = currentCoins,
+                        coins = updatedCoins,
                         energy = currentEnergy
                     )
                 }
@@ -96,6 +101,7 @@ class GameViewModel : ViewModel() {
                     )
                 }
             }
+            _zodiac.value = Zodiac.getRightZodiacSign(updatedCoins)
             planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
         }
@@ -110,6 +116,7 @@ class GameViewModel : ViewModel() {
                     coins = updatedCoins
                 )
             }
+            _zodiac.value = Zodiac.getRightZodiacSign(updatedCoins)
             planetAppBar.intValue = updateTextTopAppBar()
         }
     }
@@ -196,14 +203,19 @@ class GameViewModel : ViewModel() {
                 _planet.update { currentPlanet ->
                     currentPlanet.copy(
                         coins = updatedCoins,
-                        levelMaxEnergy = if (this.updateData == UpgradeCards.MaxEnergy) this.nextLevel ?: 10 else currentPlanet.levelMaxEnergy,
-                        levelCoinsPerTap = if (this.updateData == UpgradeCards.CoinsPerTap) this.nextLevel ?: 10 else currentPlanet.levelCoinsPerTap,
-                        levelCoinsPerSecond = if (this.updateData == UpgradeCards.CoinsPerSecond) this.nextLevel ?: 10 else currentPlanet.levelCoinsPerSecond,
-                        levelEnergyPerSecond = if (this.updateData == UpgradeCards.EnergyPerSecond) this.nextLevel ?: 10 else currentPlanet.levelEnergyPerSecond,
+                        levelMaxEnergy = if (this.updateData == UpgradeCards.MaxEnergy) this.nextLevel
+                            ?: 10 else currentPlanet.levelMaxEnergy,
+                        levelCoinsPerTap = if (this.updateData == UpgradeCards.CoinsPerTap) this.nextLevel
+                            ?: 10 else currentPlanet.levelCoinsPerTap,
+                        levelCoinsPerSecond = if (this.updateData == UpgradeCards.CoinsPerSecond) this.nextLevel
+                            ?: 10 else currentPlanet.levelCoinsPerSecond,
+                        levelEnergyPerSecond = if (this.updateData == UpgradeCards.EnergyPerSecond) this.nextLevel
+                            ?: 10 else currentPlanet.levelEnergyPerSecond,
                     )
                 }
                 updateDependentProperties()
-                _listOfUpdates.value[index] = this.updateUpgradeDataInTheList(level = this.nextLevel ?: 10)
+                _listOfUpdates.value[index] =
+                    this.updateUpgradeDataInTheList(level = this.nextLevel ?: 10)
             }
         }
     }
