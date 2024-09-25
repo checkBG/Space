@@ -44,4 +44,7 @@
     <string name="tap_on_screen_description">You\'ve taped %1s times</string>
     <string name="reward">Reward: %1s</string>
     <string name="requirement">Requirement: %1s</string>
+    <string name="get_reward">Get reward:\n%1s coins!</string>
+    <string name="spent_money">Spent your money</string>
+    <string name="spent_money_description">You\'ve spent %1s coins</string>
 </resources>

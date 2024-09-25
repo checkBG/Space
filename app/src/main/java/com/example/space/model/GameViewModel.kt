@@ -111,8 +111,7 @@ class GameViewModel : ViewModel() {
             planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
             updateAchieved(
-                countOfTapsOnScreenIncrease = 1,
-                countOfSpentMoneyIncrease = coinsPerTap.value
+                countOfTapsOnScreenIncrease = 1
             )
             checkGetAchievement()
         }
@@ -210,10 +209,10 @@ class GameViewModel : ViewModel() {
                 achievement = AchievementTapOnScreen.achievementTapOnScreen(level = 1),
                 isCompleted = false
             ),
-//            Achievement(
-//                achievement = AchievementSpentMoney.achievementSpentMoney(level = 1),
-//                isCompleted = false
-//            )
+            Achievement(
+                achievement = AchievementSpentMoney.achievementSpentMoney(level = 1),
+                isCompleted = false
+            )
         )
     )
     val listOfAchievements
@@ -284,31 +283,37 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun checkGetAchievement() {
+    private fun checkGetAchievement(isGotReward: Boolean = false) {
         _listOfAchievements.value.forEachIndexed { index, achievement ->
-            if (achievement.achievement.requirement <= getCheckedAchievement(achievement = achievement.achievement.type)) {
+            if (achievement.achievement.requirement <= getCheckedAchievement(achievement = achievement.achievement.type) && !achievement.isCompleted) {
                 _listOfAchievements.value[index] = _listOfAchievements.value[index].copy(
-                    achievement = when (achievement.achievement.type) {
-                        AchievementType.Tap -> AchievementTapOnScreen.achievementTapOnScreen(level = listOfAchievements.value[index].achievement.level.inc())
-                        else -> AchievementSpentMoney.achievementSpentMoney(level = listOfAchievements.value[index].achievement.level.inc()) /* TODO:*/
+                    achievement = if (isGotReward) {
+                        when (achievement.achievement.type) {
+                            AchievementType.Tap -> AchievementTapOnScreen.achievementTapOnScreen(
+                                level = listOfAchievements.value[index].achievement.level.inc()
+                            )
+                            else -> AchievementSpentMoney.achievementSpentMoney(level = listOfAchievements.value[index].achievement.level.inc()) /* TODO:*/
+                        }
+                    } else {
+                        achievement.achievement
                     },
-                    isCompleted = true
+                    isCompleted = !isGotReward
                 )
-
-                _planet.update { currentPlanet ->
-                    currentPlanet.copy(coins = planet.value.coins + achievement.achievement.reward)
-                }
             }
         }
     }
 
-    private fun gotReward(achievement: AchievementType) {
+    fun gotReward(achievement: AchievementType) {
         val index =
             listOfAchievements.value.indexOf(listOfAchievements.value.find { type: Achievement -> type.achievement.type == achievement })
         _listOfAchievements.value[index] = _listOfAchievements.value[index].copy(
             isCompleted = false
         )
-        checkGetAchievement()
+
+        _planet.update { currentPlanet ->
+            currentPlanet.copy(coins = planet.value.coins + listOfAchievements.value[index].achievement.reward)
+        }
+        checkGetAchievement(isGotReward = true)
     }
 
     private fun energyRecovery() {

@@ -3,8 +3,6 @@ package com.example.space.model
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.space.R
-import com.example.space.model.AchievementTapOnScreen.Companion.requirementValue
-import com.example.space.model.AchievementTapOnScreen.Companion.rewardValue
 
 data class Achievement(
     val achievement: AchievementDetail,
@@ -37,14 +35,22 @@ class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
     override val reward: Int = rewardValue(level = level)
     override val type: AchievementType = AchievementType.Spent
 
-    override val nameOfAchievement: Int = 0
-    override val descriptionOfAchievement: Int = 0
-    override val imageOfAchievement: Int = 0
+    override val nameOfAchievement: Int = R.string.spent_money
+    override val descriptionOfAchievement: Int = R.string.spent_money_description
+    override val imageOfAchievement: Int = R.drawable.money_svgrepo_com
 
     companion object {
         private fun requirementValue(level: Int): Int {
             return when(level) {
                 1 -> 300
+                2 -> 1000
+                3 -> 5000
+                4 -> 32000
+                5 -> 50000
+                6 -> 396_500
+                7 -> 1_000_000
+                8 -> 10_000_000
+                9 -> 35_000_000
                 else -> 100_000_000 /* TODO: Implementing the function */
             }
         }
@@ -52,6 +58,14 @@ class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
         private fun rewardValue(level: Int): Int {
             return when(level) {
                 1 -> 50
+                2 -> 200
+                3 -> 500
+                4 -> 2000
+                5 -> 3900
+                6 -> 10000
+                7 -> 24000
+                8 -> 80000
+                9 -> 130_000
                 else -> 1_000_000 /* TODO: Implementing the function */
             }
         }
@@ -112,7 +126,7 @@ data class Status(
 )
 
 
-enum class AchievementType() {
+enum class AchievementType {
     Tap,
     Spent,
     Recovery,

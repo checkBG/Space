@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -40,13 +41,16 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
+import com.example.space.gameViewModel
 import com.example.space.model.Achievement
+import com.example.space.model.AchievementType
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
 import com.example.space.utils.getColor
@@ -94,9 +98,11 @@ fun ColumnOfAchievements(
                 CardOfAchievement(
                     reward = reward,
                     done = gameViewModel.getCheckedAchievement(achievement = type),
+                    type = type,
                     requirement = requirement,
                     nameOfAchievement = nameOfAchievement,
                     descriptionOfAchievement = descriptionOfAchievement,
+                    isCompleted = achievement.isCompleted,
                     imageOfAchievement = imageOfAchievement
                 )
             }
@@ -108,6 +114,8 @@ fun ColumnOfAchievements(
 fun CardOfAchievement(
     modifier: Modifier = Modifier,
     reward: Int,
+    isCompleted: Boolean,
+    type: AchievementType,
     done: Int,
     requirement: Int,
     @StringRes nameOfAchievement: Int,
@@ -135,32 +143,59 @@ fun CardOfAchievement(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
-                Column(modifier = Modifier.padding(3.dp)) {
-                    Text(
-                        text = stringResource(id = nameOfAchievement),
-                        style = MaterialTheme.typography.displaySmall
-                    )
+            if (!isCompleted) {
+                Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
+                    Column(modifier = Modifier.padding(3.dp)) {
+                        Text(
+                            text = stringResource(id = nameOfAchievement),
+                            style = MaterialTheme.typography.displaySmall
+                        )
 
+                        Text(
+                            text = stringResource(
+                                id = R.string.reward,
+                                String.format(Locale.getDefault(), "%,d", reward)
+                            )
+                        )
+
+                        Text(
+                            text = stringResource(
+                                id = descriptionOfAchievement,
+                                String.format(Locale.getDefault(), "%,d", done)
+                            )
+                        )
+
+                        Text(
+                            text = stringResource(
+                                id = R.string.requirement,
+                                String.format(Locale.getDefault(), "%,d", requirement)
+                            )
+                        )
+                    }
+                }
+            } else {
+                Card(
+                    onClick = { gameViewModel.gotReward(achievement = type) },
+                    border = BorderStroke(
+                        width = 3.dp, brush = Brush.radialGradient(
+                            colors = listOf(
+                                colorResource(id = R.color.sun),
+                                colorResource(id = R.color.star),
+                                colorResource(id = R.color.light_turquoise)
+                            )
+                        )
+                    ),
+                    modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)
+                ) {
                     Text(
                         text = stringResource(
-                            id = R.string.reward,
+                            id = R.string.get_reward,
                             String.format(Locale.getDefault(), "%,d", reward)
-                        )
-                    )
-
-                    Text(
-                        text = stringResource(
-                            id = descriptionOfAchievement,
-                            String.format(Locale.getDefault(), "%,d", done)
-                        )
-                    )
-
-                    Text(
-                        text = stringResource(
-                            id = R.string.requirement,
-                            String.format(Locale.getDefault(), "%,d", requirement)
-                        )
+                        ),
+                        style = MaterialTheme.typography.displaySmall,
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
                     )
                 }
             }
