@@ -152,7 +152,7 @@ fun UpgradeSelectionCard(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        onClick = { onClick(index, requiredToUp, nextLevel) },
+                        onClick = { onClick(index, requiredToUp) },
                         colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.turquoise)),
                         enabled = (gamePlanetState.coins - requiredToUp >= 0),
                         modifier = Modifier

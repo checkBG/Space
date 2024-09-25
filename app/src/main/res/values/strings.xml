@@ -40,4 +40,8 @@
     <string name="zodiac_sign_capricorn">Capricorn</string>
     <string name="zodiac_sign_aquarius">Aquarius</string>
     <string name="zodiac_sign_pisces">Pisces</string>
+    <string name="tap_on_screen">Tap on the screen</string>
+    <string name="tap_on_screen_description">You\'ve taped %1s times</string>
+    <string name="reward">Reward: %1s</string>
+    <string name="requirement">Requirement: %1s</string>
 </resources>

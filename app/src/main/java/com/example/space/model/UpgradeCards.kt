@@ -11,7 +11,7 @@ data class UpdateData(
     val nextLevel: Int?,
     val isMaxLevel: Boolean,
     val requiredToUp: Int,
-    val onClick: (Int, Int, Int) -> Unit,
+    val onClick: (Int, Int) -> Unit,
     val updateData: UpgradeCards
 ) {
     companion object {

@@ -22,9 +22,7 @@ class GameViewModel : ViewModel() {
     val planet: StateFlow<Planet>
         get() = _planet.asStateFlow()
 
-    private val _achieved = MutableStateFlow(Status())
-    val achieved: StateFlow<Status>
-        get() = _achieved.asStateFlow()
+    private val achieved = MutableStateFlow(Status())
 
     private val _zodiac =
         MutableStateFlow(Zodiac.getRightZodiacSign(currentCountOfCoins = planet.value.coins))
@@ -112,6 +110,11 @@ class GameViewModel : ViewModel() {
             )
             planetAppBar.intValue = updateTextTopAppBar()
             progressPercentage = updateProgressPercentage()
+            updateAchieved(
+                countOfTapsOnScreenIncrease = 1,
+                countOfSpentMoneyIncrease = coinsPerTap.value
+            )
+            checkGetAchievement()
         }
     }
 
@@ -142,10 +145,9 @@ class GameViewModel : ViewModel() {
             isMaxLevel = Progress.isMaxLevel(level = planet.value.levelCoinsPerTap),
             requiredToUp = Progress.requiredToUp(level = planet.value.levelCoinsPerTap),
             updateData = UpgradeCards.CoinsPerTap,
-            onClick = { index, requiredToUp, nextLevel ->
+            onClick = { index, requiredToUp ->
                 upgradeProgress(
                     requiredToUp = requiredToUp,
-                    nextLevel = nextLevel,
                     index = index
                 )
             }
@@ -159,10 +161,9 @@ class GameViewModel : ViewModel() {
             isMaxLevel = Progress.isMaxLevel(level = planet.value.levelCoinsPerSecond),
             requiredToUp = Progress.requiredToUp(level = planet.value.levelCoinsPerSecond),
             updateData = UpgradeCards.CoinsPerSecond,
-            onClick = { index, requiredToUp, nextLevel ->
+            onClick = { index, requiredToUp ->
                 upgradeProgress(
                     requiredToUp = requiredToUp,
-                    nextLevel = nextLevel,
                     index = index
                 )
             }
@@ -176,10 +177,9 @@ class GameViewModel : ViewModel() {
             isMaxLevel = Progress.isMaxLevel(level = planet.value.levelMaxEnergy),
             requiredToUp = Progress.requiredToUp(level = planet.value.levelMaxEnergy),
             updateData = UpgradeCards.MaxEnergy,
-            onClick = { index, requiredToUp, nextLevel ->
+            onClick = { index, requiredToUp ->
                 upgradeProgress(
                     requiredToUp = requiredToUp,
-                    nextLevel = nextLevel,
                     index = index
                 )
             }
@@ -193,10 +193,9 @@ class GameViewModel : ViewModel() {
             isMaxLevel = Progress.isMaxLevel(level = planet.value.levelEnergyPerSecond),
             requiredToUp = Progress.requiredToUp(level = planet.value.levelEnergyPerSecond),
             updateData = UpgradeCards.EnergyPerSecond,
-            onClick = { index, requiredToUp, nextLevel ->
+            onClick = { index, requiredToUp ->
                 upgradeProgress(
                     requiredToUp = requiredToUp,
-                    nextLevel = nextLevel,
                     index = index
                 )
             }
@@ -206,20 +205,21 @@ class GameViewModel : ViewModel() {
         get() = _listOfUpdates
 
     private val _listOfAchievements = MutableStateFlow(
-        mutableListOf<Achievement>(
+        mutableListOf(
             Achievement( // require taps on the screen
-                requirement = 10000,
-                achievement =,
-                reward =,
-                nameOfAchievement =,
-                descriptionOfAchievement =,
-                imageOfAchievement =,
+                achievement = AchievementTapOnScreen.achievementTapOnScreen(level = 1),
                 isCompleted = false
-            )
+            ),
+//            Achievement(
+//                achievement = AchievementSpentMoney.achievementSpentMoney(level = 1),
+//                isCompleted = false
+//            )
         )
     )
+    val listOfAchievements
+        get() = _listOfAchievements
 
-    private fun upgradeProgress(requiredToUp: Int, nextLevel: Int, index: Int) {
+    private fun upgradeProgress(requiredToUp: Int, index: Int) {
         val updatedProgress = _listOfUpdates.value[index]
 
         if (planet.value.coins >= requiredToUp) {
@@ -242,7 +242,73 @@ class GameViewModel : ViewModel() {
                 _listOfUpdates.value[index] =
                     this.updateUpgradeDataInTheList(level = this.nextLevel ?: maxLevel)
             }
+
+            updateAchieved(
+                countOfUpgradedCardsIncrease = 1,
+                countOfSpentMoneyIncrease = requiredToUp
+            )
+            checkGetAchievement()
         }
+    }
+
+    private fun updateAchieved(
+        countOfTapsOnScreenIncrease: Int = 0,
+        countOfRecoveredEnergyIncrease: Int = 0,
+        countOfUpgradedCardsIncrease: Int = 0,
+        countOfSpentMoneyIncrease: Int = 0
+    ) {
+        val countOfTapsOnScreen: Int =
+            achieved.value.countOfTapsOnScreen + countOfTapsOnScreenIncrease
+        val countOfRecoveredEnergy: Int =
+            achieved.value.countOfRecoveredEnergy + countOfRecoveredEnergyIncrease
+        val countOfUpgradedCards: Int =
+            achieved.value.countOfUpgradedCards + countOfUpgradedCardsIncrease
+        val countOfSpentMoney: Int = achieved.value.countOfSpentMoney + countOfSpentMoneyIncrease
+
+        achieved.update { currentAchieved ->
+            currentAchieved.copy(
+                countOfTapsOnScreen = countOfTapsOnScreen,
+                countOfRecoveredEnergy = countOfRecoveredEnergy,
+                countOfUpgradedCards = countOfUpgradedCards,
+                countOfSpentMoney = countOfSpentMoney
+            )
+        }
+    }
+
+    fun getCheckedAchievement(achievement: AchievementType): Int {
+        return when (achievement) {
+            AchievementType.Tap -> achieved.value.countOfTapsOnScreen
+            AchievementType.Spent -> achieved.value.countOfSpentMoney
+            AchievementType.Upgrade -> achieved.value.countOfUpgradedCards
+            else -> achieved.value.countOfRecoveredEnergy
+        }
+    }
+
+    private fun checkGetAchievement() {
+        _listOfAchievements.value.forEachIndexed { index, achievement ->
+            if (achievement.achievement.requirement <= getCheckedAchievement(achievement = achievement.achievement.type)) {
+                _listOfAchievements.value[index] = _listOfAchievements.value[index].copy(
+                    achievement = when (achievement.achievement.type) {
+                        AchievementType.Tap -> AchievementTapOnScreen.achievementTapOnScreen(level = listOfAchievements.value[index].achievement.level.inc())
+                        else -> AchievementSpentMoney.achievementSpentMoney(level = listOfAchievements.value[index].achievement.level.inc()) /* TODO:*/
+                    },
+                    isCompleted = true
+                )
+
+                _planet.update { currentPlanet ->
+                    currentPlanet.copy(coins = planet.value.coins + achievement.achievement.reward)
+                }
+            }
+        }
+    }
+
+    private fun gotReward(achievement: AchievementType) {
+        val index =
+            listOfAchievements.value.indexOf(listOfAchievements.value.find { type: Achievement -> type.achievement.type == achievement })
+        _listOfAchievements.value[index] = _listOfAchievements.value[index].copy(
+            isCompleted = false
+        )
+        checkGetAchievement()
     }
 
     private fun energyRecovery() {
@@ -262,6 +328,8 @@ class GameViewModel : ViewModel() {
             }
 
             progressPercentage = updateProgressPercentage()
+            updateAchieved(countOfRecoveredEnergyIncrease = increaseEnergy)
+            checkGetAchievement()
         }
     }
 

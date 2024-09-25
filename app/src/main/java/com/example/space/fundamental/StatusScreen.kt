@@ -1,5 +1,6 @@
 package com.example.space.fundamental
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -7,9 +8,21 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,9 +46,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
-import com.example.space.utils.getColor
+import com.example.space.model.Achievement
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
+import com.example.space.utils.getColor
+import java.util.Locale
 
 @Composable
 fun StatusScreen(
@@ -44,17 +59,118 @@ fun StatusScreen(
 ) {
     val gamePlanetState by gameViewModel.planet.collectAsState()
     val zodiacState by gameViewModel.zodiac.collectAsState()
+    val achievements by gameViewModel.listOfAchievements.collectAsState()
 
     Box {
         StatusScreenBackground()
 
-
         ProgressBar(
-            modifier = modifier,
             currentCoins = gamePlanetState.coins,
             nextCoins = zodiacState.requireCoins,
-            zodiacSign = zodiacState.zodiacSign
+            zodiacSign = zodiacState.zodiacSign,
+            modifier = modifier
         )
+
+        ColumnOfAchievements(
+            listOfAchievements = achievements,
+            gameViewModel = gameViewModel,
+            modifier = modifier
+                .padding(top = 140.dp)
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.TopCenter)
+        )
+    }
+}
+
+@Composable
+fun ColumnOfAchievements(
+    modifier: Modifier = Modifier,
+    listOfAchievements: MutableList<Achievement>,
+    gameViewModel: GameViewModel
+) {
+    LazyColumn(modifier = modifier) {
+        items(items = listOfAchievements) { achievement ->
+            achievement.achievement.apply {
+                CardOfAchievement(
+                    reward = reward,
+                    done = gameViewModel.getCheckedAchievement(achievement = type),
+                    requirement = requirement,
+                    nameOfAchievement = nameOfAchievement,
+                    descriptionOfAchievement = descriptionOfAchievement,
+                    imageOfAchievement = imageOfAchievement
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CardOfAchievement(
+    modifier: Modifier = Modifier,
+    reward: Int,
+    done: Int,
+    requirement: Int,
+    @StringRes nameOfAchievement: Int,
+    @StringRes descriptionOfAchievement: Int,
+    @DrawableRes imageOfAchievement: Int
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp)
+    ) {
+        HorizontalDivider(thickness = 2.dp, color = Color.White)
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Row {
+            Card {
+                Image(
+                    painter = painterResource(id = imageOfAchievement),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(105.dp)
+                        .padding(5.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
+                Column(modifier = Modifier.padding(3.dp)) {
+                    Text(
+                        text = stringResource(id = nameOfAchievement),
+                        style = MaterialTheme.typography.displaySmall
+                    )
+
+                    Text(
+                        text = stringResource(
+                            id = R.string.reward,
+                            String.format(Locale.getDefault(), "%,d", reward)
+                        )
+                    )
+
+                    Text(
+                        text = stringResource(
+                            id = descriptionOfAchievement,
+                            String.format(Locale.getDefault(), "%,d", done)
+                        )
+                    )
+
+                    Text(
+                        text = stringResource(
+                            id = R.string.requirement,
+                            String.format(Locale.getDefault(), "%,d", requirement)
+                        )
+                    )
+                }
+            }
+        }
+
+        /* TODO: Have to implement Progress bar */
+
+
+        Spacer(modifier = Modifier.height(5.dp))
+        HorizontalDivider(thickness = 2.dp, color = Color.White)
     }
 }
 
@@ -68,6 +184,12 @@ fun StatusScreenBackground(modifier: Modifier = Modifier) {
     )
 }
 
+@Composable
+fun ProgressBarForAchievement(modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.fillMaxWidth()) {
+
+    }
+}
 
 @Composable
 fun ProgressBar(
