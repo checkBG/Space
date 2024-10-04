@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,23 +48,29 @@ fun UpgradeScreen(
     Box {
         UpgradeBackgroundScreen()
 
-        UpgradeListLazyColumn(gameViewModel = gameViewModel, modifier = modifier)
+        UpgradeListLazyColumn(
+            gameViewModel = gameViewModel,
+            modifier = modifier,
+            screenSize = screenSize
+        )
     }
 }
 
 @Composable
 fun UpgradeListLazyColumn(
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel,
     modifier: Modifier = Modifier
 ) {
     val listOfUpdatesUi by gameViewModel.listOfUpdates.collectAsState()
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         itemsIndexed(items = listOfUpdatesUi) { index, updatableData ->
             updatableData.apply {
                 UpgradeSelectionCard(
                     gameViewModel = gameViewModel,
-                    index = index
+                    index = index,
+                    screenSize = screenSize
                 )
             }
         }
@@ -84,6 +90,7 @@ fun UpgradeBackgroundScreen() {
 
 @Composable
 fun UpgradeSelectionCard(
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel,
     index: Int,
     modifier: Modifier = Modifier
@@ -91,14 +98,17 @@ fun UpgradeSelectionCard(
     val listOfUpdatesUi by gameViewModel.listOfUpdates.collectAsState()
     val gamePlanetState by gameViewModel.planet.collectAsState()
 
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
-    // val screenHeight = configuration.screenHeightDp
+    val widthOfLazyColumn = when (screenSize) {
+        SpaceScreenSize.Small -> 400.dp
+        SpaceScreenSize.Medium -> 550.dp
+        SpaceScreenSize.Large -> 700.dp
+    }
 
     Card(
         modifier = modifier
-            .width(width = screenWidth.dp)
-            .padding(start = 20.dp, end = 20.dp, bottom = 3.dp, top = 3.dp)
+            .width(width = widthOfLazyColumn)
+            .padding(start = 20.dp, end = 20.dp, bottom = 3.dp, top = 3.dp),
+
     ) {
         listOfUpdatesUi[index].apply {
             Column(
@@ -179,19 +189,46 @@ fun UpgradeSelectionCardPreview() {
     SpaceTheme {
         UpgradeSelectionCard(
             gameViewModel = GameViewModel(),
-            index = 0
+            index = 0,
+            screenSize = SpaceScreenSize.Small
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
-fun UpgradeScreenPreview() {
+fun UpgradeScreenCompactPreview() {
     SpaceTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Surface(modifier = Modifier.fillMaxSize()) {
             UpgradeScreen(
-                modifier = Modifier.padding(innerPadding), gameViewModel = viewModel(),
+                modifier = Modifier, gameViewModel = viewModel(),
                 screenSize = SpaceScreenSize.Small
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 700)
+@Composable
+fun UpgradeScreenMediumPreview() {
+    SpaceTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            UpgradeScreen(
+                modifier = Modifier, gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Medium
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 1000)
+@Composable
+fun UpgradeScreenLargePreview() {
+    SpaceTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            UpgradeScreen(
+                modifier = Modifier, gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Large
             )
         }
     }

@@ -68,7 +68,10 @@ fun PlanetScreen(
     Box(modifier = modifier) {
         SpaceBackground()
 
-        SpaceButtonImageCenter(onClick = { gameViewModel.updateCoinsForTap() })
+        SpaceButtonImageCenter(
+            onClick = { gameViewModel.updateCoinsForTap() },
+            screenSize = screenSize
+        )
 
         CountOfCoinsRow(
             currentCoins = gamePlanetState.coins,
@@ -82,12 +85,34 @@ fun PlanetScreen(
 @Composable
 private fun CustomProgressBar(
     modifier: Modifier = Modifier,
+    screenSize: SpaceScreenSize,
     progressPercentage: Float = 1.0f
 ) {
     val image = ImageBitmap.imageResource(id = R.drawable.moon_png42)
-    val widthImage = 25
-    val heightImage = 25
 
+    val sizeImageBelowCanvas = when (screenSize) {
+        SpaceScreenSize.Small -> 90.dp
+        SpaceScreenSize.Medium -> 110.dp
+        SpaceScreenSize.Large -> 120.dp
+    }
+
+    val thickness = when(screenSize) {
+        SpaceScreenSize.Small -> 10.dp
+        SpaceScreenSize.Medium -> 12.dp
+        SpaceScreenSize.Large -> 13.5.dp
+    }
+
+    val sizeOfCanvas = when(screenSize) {
+        SpaceScreenSize.Small -> 110.dp
+        SpaceScreenSize.Medium -> 125.dp
+        SpaceScreenSize.Large -> 145.dp
+    }
+
+    val indicatorSize = when(screenSize) {
+        SpaceScreenSize.Small -> 25
+        SpaceScreenSize.Medium -> 28
+        SpaceScreenSize.Large -> 33
+    }
 
     Box(
         modifier = modifier
@@ -97,22 +122,20 @@ private fun CustomProgressBar(
             painter = painterResource(id = R.drawable.sun),
             contentDescription = null,
             modifier = Modifier
-                .size(90.dp)
+                .size(sizeImageBelowCanvas)
                 .align(alignment = Alignment.Center)
-//                .padding(20.dp)
-//                .padding(end = 16.dp)
         )
 
         Canvas(
             modifier = Modifier
-                .size(110.dp), onDraw = {
+                .size(sizeOfCanvas), onDraw = {
                 // background arc
                 drawArc(
                     color = Color.Gray,
                     startAngle = 180f,
                     sweepAngle = 180f,
                     useCenter = false,
-                    style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round),
+                    style = Stroke(width = thickness.toPx(), cap = StrokeCap.Round),
                     size = Size(size.width, size.height)
                 )
 
@@ -128,16 +151,16 @@ private fun CustomProgressBar(
                     startAngle = 180f,
                     sweepAngle = progressPercentage * 180f,
                     useCenter = false,
-                    style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round),
+                    style = Stroke(width = thickness.toPx(), cap = StrokeCap.Round),
                     size = Size(size.width, size.height)
                 )
 
                 val angleInDegrees = (progressPercentage * 180.0) + 90.0
                 val radius = (size.height / 2)
                 val x =
-                    -(radius * sin(Math.toRadians(angleInDegrees))).toFloat() + ((size.width - widthImage) / 2)
+                    -(radius * sin(Math.toRadians(angleInDegrees))).toFloat() + ((size.width - indicatorSize) / 2)
                 val y =
-                    (radius * cos(Math.toRadians(angleInDegrees))).toFloat() + ((size.height - heightImage) / 2)
+                    (radius * cos(Math.toRadians(angleInDegrees))).toFloat() + ((size.height - indicatorSize) / 2)
 
                 // icon for split
 //            drawCircle(
@@ -149,7 +172,7 @@ private fun CustomProgressBar(
                 // icon for split
                 drawImage(
                     image = image,
-                    dstSize = IntSize(widthImage, heightImage),
+                    dstSize = IntSize(indicatorSize, indicatorSize),
                     dstOffset = IntOffset(x.roundToInt(), y.roundToInt())
                 )
             })
@@ -170,7 +193,7 @@ fun CountOfCoinsRow(
             .fillMaxWidth()
             .padding(start = 25.dp, top = 130.dp)
     ) {
-        CustomProgressBar(progressPercentage = progressPercentage)
+        CustomProgressBar(progressPercentage = progressPercentage, screenSize = screenSize)
 
         Text(
             text = String.format(Locale.getDefault(), "%,d", currentCoins),
@@ -199,11 +222,17 @@ fun SpaceBackground(modifier: Modifier = Modifier) {
 @SuppressLint("ReturnFromAwaitPointerEventScope")
 @Composable
 fun SpaceButtonImageCenter(
+    screenSize: SpaceScreenSize,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isScalePlanetSize by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(targetValue = if (isScalePlanetSize) 0.94f else 1f, label = "")
+    val sizeOfPlanet = when (screenSize) {
+        SpaceScreenSize.Small -> 240.dp
+        SpaceScreenSize.Medium -> 300.dp
+        SpaceScreenSize.Large -> 340.dp
+    }
 
     Image(
         painter = painterResource(id = R.drawable.click_planet),
@@ -223,7 +252,7 @@ fun SpaceButtonImageCenter(
                 }
             }
             .scale(scale = scale)
-            .size(240.dp)
+            .size(sizeOfPlanet)
             .clip(shape = MaterialTheme.shapes.small)
             .clickable(
                 onClick = onClick,
@@ -255,7 +284,8 @@ fun SpaceImageCenterPreview() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SpaceButtonImageCenter(
                 onClick = { },
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                screenSize = SpaceScreenSize.Small
             )
         }
     }
@@ -273,7 +303,19 @@ fun SpaceBackgroundPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun SpaceAppPreview() {
+fun CustomProgressBarPreview() {
+    SpaceTheme {
+        Surface(
+            modifier = Modifier
+        ) {
+            CustomProgressBar(screenSize = SpaceScreenSize.Small)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpaceAppCompactPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             PlanetScreen(
@@ -285,14 +327,31 @@ fun SpaceAppPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, widthDp = 700)
 @Composable
-fun CustomProgressBarPreview() {
+fun SpaceAppMediumPreview() {
     SpaceTheme {
-        Surface(
-            modifier = Modifier
-        ) {
-            CustomProgressBar()
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            PlanetScreen(
+                modifier = Modifier.padding(innerPadding),
+                gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Medium
+            )
         }
     }
 }
+
+@Preview(showBackground = true, widthDp = 1000)
+@Composable
+fun SpaceAppLargePreview() {
+    SpaceTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            PlanetScreen(
+                modifier = Modifier.padding(innerPadding),
+                gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Large
+            )
+        }
+    }
+}
+

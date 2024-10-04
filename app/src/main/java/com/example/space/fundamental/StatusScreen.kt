@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,8 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,12 +71,14 @@ fun StatusScreen(
             currentCoins = gamePlanetState.coins,
             nextCoins = zodiacState.requireCoins,
             zodiacSign = zodiacState.zodiacSign,
+            screenSize = screenSize,
             modifier = modifier
         )
 
         ColumnOfAchievements(
             listOfAchievements = achievements,
             gameViewModel = gameViewModel,
+            screenSize = screenSize,
             modifier = modifier
                 .padding(top = 140.dp)
                 .fillMaxSize()
@@ -90,6 +89,7 @@ fun StatusScreen(
 
 @Composable
 fun ColumnOfAchievements(
+    screenSize: SpaceScreenSize,
     modifier: Modifier = Modifier,
     listOfAchievements: MutableList<Achievement>,
     gameViewModel: GameViewModel
@@ -106,7 +106,8 @@ fun ColumnOfAchievements(
                     nameOfAchievement = nameOfAchievement,
                     descriptionOfAchievement = descriptionOfAchievement,
                     isCompleted = achievement.isCompleted,
-                    imageOfAchievement = imageOfAchievement
+                    imageOfAchievement = imageOfAchievement,
+                    screenSize = screenSize
                 )
             }
         }
@@ -115,6 +116,7 @@ fun ColumnOfAchievements(
 
 @Composable
 fun CardOfAchievement(
+    screenSize: SpaceScreenSize,
     modifier: Modifier = Modifier,
     reward: Int,
     isCompleted: Boolean,
@@ -126,14 +128,33 @@ fun CardOfAchievement(
     @StringRes descriptionOfAchievement: Int,
     @DrawableRes imageOfAchievement: Int
 ) {
+    val heightOfCard = when (screenSize) {
+        SpaceScreenSize.Small -> 105.dp
+        SpaceScreenSize.Medium -> 130.dp
+        SpaceScreenSize.Large -> 135.dp
+    }
+
+    val widthOfCard = when (screenSize) {
+        SpaceScreenSize.Small -> 300.dp
+        SpaceScreenSize.Medium -> 500.dp
+        SpaceScreenSize.Large -> 700.dp
+    }
+
     val turn by animateFloatAsState(
         targetValue = if (isCompleted) 0f else listOf(360f, -360f, 720f, -720f).random(),
         animationSpec = tween(listOf(1000, 900, 800, 700, 600, 500).random()),
         label = "floatStateTurn"
     )
 
-    Column(modifier = modifier) {
-        HorizontalDivider(thickness = 2.dp, color = Color.White)
+    Column(
+        modifier = modifier.padding(end = 5.dp, start = 5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = colorResource(id = R.color.light_turquoise),
+            modifier = Modifier.width(500.dp)
+        )
         Spacer(modifier = Modifier.height(5.dp))
 
         Row(
@@ -146,7 +167,7 @@ fun CardOfAchievement(
                     painter = painterResource(id = imageOfAchievement),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(105.dp)
+                        .size(heightOfCard)
                         .padding(5.dp)
                         .rotate(degrees = turn)
                 )
@@ -155,7 +176,7 @@ fun CardOfAchievement(
             Spacer(modifier = Modifier.width(10.dp))
 
             if (!isCompleted && !isMaxLevel) {
-                Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
+                Card(modifier = Modifier.size(width = widthOfCard, height = heightOfCard)) {
                     Column(modifier = Modifier.padding(3.dp)) {
                         Text(
                             text = stringResource(id = nameOfAchievement),
@@ -196,7 +217,7 @@ fun CardOfAchievement(
                             )
                         )
                     ),
-                    modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)
+                    modifier = Modifier.size(width = widthOfCard, height = heightOfCard)
                 ) {
                     Text(
                         text = stringResource(
@@ -210,7 +231,7 @@ fun CardOfAchievement(
                     )
                 }
             } else {
-                Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
+                Card(modifier = Modifier.size(width = widthOfCard, height = heightOfCard)) {
                     Text(
                         text = stringResource(id = R.string.is_max_level),
                         style = MaterialTheme.typography.bodyLarge,
@@ -229,12 +250,19 @@ fun CardOfAchievement(
             ProgressBarForAchievement(
                 currentCoins = done,
                 requirement = requirement,
-                modifier = Modifier.fillMaxSize().wrapContentSize()
+                screenSize = screenSize,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
             )
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
-        HorizontalDivider(thickness = 2.dp, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = colorResource(id = R.color.light_turquoise),
+            modifier = Modifier.width(500.dp)
+        )
     }
 }
 
@@ -250,10 +278,22 @@ fun StatusScreenBackground(modifier: Modifier = Modifier) {
 
 @Composable
 fun ProgressBarForAchievement(
+    screenSize: SpaceScreenSize,
     modifier: Modifier = Modifier,
     currentCoins: Int,
     requirement: Int
 ) {
+    val heightOfProgressBar = when (screenSize) {
+        SpaceScreenSize.Small -> 7.dp
+        SpaceScreenSize.Medium -> 9.dp
+        SpaceScreenSize.Large -> 11.dp
+    }
+    val widthOfCanvas = when (screenSize) {
+        SpaceScreenSize.Small -> 250.dp
+        SpaceScreenSize.Medium -> 400.dp
+        SpaceScreenSize.Large -> 600.dp
+    }
+
     val percentage by animateFloatAsState(
         targetValue = if (currentCoins <= requirement) {
             currentCoins.toFloat() / requirement.toFloat()
@@ -263,7 +303,11 @@ fun ProgressBarForAchievement(
     )
 
     Box(modifier = modifier) {
-        Canvas(modifier = Modifier.size(width = 350.dp, height = 8.dp)) {
+        Canvas(
+            modifier = Modifier.size(
+                width = widthOfCanvas, height = heightOfProgressBar
+            )
+        ) {
             drawRoundRect( // is the background of the rect if the progress less than 100%
                 color = Color(0xFFFFFFFF),
                 size = Size(size.width, size.height - 1f),
@@ -288,133 +332,126 @@ fun ProgressBarForAchievement(
 
 @Composable
 fun ProgressBar(
+    screenSize: SpaceScreenSize,
     modifier: Modifier = Modifier,
     currentCoins: Int,
     nextCoins: Int,
     @StringRes zodiacSign: Int
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp
-    val screenHeightDp = configuration.screenHeightDp
-
-    val screenWidthPx = with(LocalDensity.current) { screenWidthDp.dp.toPx() }
-    val screenHeightPx = with(LocalDensity.current) { screenHeightDp.dp.toPx() }
-
+    val intentForWidthArrow = 32f
+    val intentForHeightArrow = 50f
     val percentage by animateFloatAsState(
         targetValue = currentCoins.toFloat() / nextCoins.toFloat(),
         animationSpec = tween(300),
         label = "floatState"
     )
-    val widthOfRectForPermanentConfiguration = if (screenWidthDp <= 500) 700f else 1000f
-    val widthOfRect = (if (screenWidthDp <= 500) 700f else 1000f) * percentage
-
-    val startPositionOfAllProgressBarWidth =
-        if (screenWidthDp <= 500) screenWidthPx / 5f else screenWidthPx / 3f
-    val startPositionOfAllProgressBarHeight =
-        if (screenHeightDp <= 2000) screenHeightPx / 15f else screenHeightPx / 25f
-    val startPositionForArrow = Offset(
-        x = startPositionOfAllProgressBarWidth + widthOfRect - 30f,
-        y = startPositionOfAllProgressBarHeight
-    )
-    val startPositionForRect =
-        Offset(x = startPositionOfAllProgressBarWidth, startPositionOfAllProgressBarHeight + 43f)
     val colorOfArrow by animateColorAsState(
         targetValue = percentage.getColor(), label = "colorState"
     )
 
-
-    Box(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(id = zodiacSign),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(align = Alignment.TopCenter)
-                .padding(top = 10.dp)
-        )
-
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRoundRect( // is the background of the rect if the progress less than 100%
-                color = Color.LightGray,
-                topLeft = startPositionForRect,
-                size = Size(widthOfRectForPermanentConfiguration, 15f),
-                cornerRadius = CornerRadius(50f)
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = zodiacSign),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
             )
 
-            drawRoundRect( // is the second rect of the progress. Has been created emphasizing the main rect
-                brush = Brush.linearGradient(listOf(Color(0xFF6600FF), Color(0xFF9400D3))),
-                topLeft = Offset(startPositionForRect.x - 0.5f, startPositionForRect.y - 0.5f),
-                size = Size(widthOfRect + 1f, 16f),
-                cornerRadius = CornerRadius(50f)
-            )
+            Canvas(
+                modifier = Modifier.size(
+                    width = when (screenSize) {
+                        SpaceScreenSize.Small -> 280.dp
+                        SpaceScreenSize.Medium -> 400.dp
+                        SpaceScreenSize.Large -> 450.dp
+                    }, height = 7.5.dp
+                )
+            ) {
+                drawRoundRect( // is the background of the rect if the progress less than 100%
+                    color = Color.LightGray,
+                    size = Size(size.width, size.height),
+                    cornerRadius = CornerRadius(50f)
+                )
 
-            drawRoundRect( // is the main rect of the progress
-                brush = Brush.linearGradient(listOf(Color(0xFFECE086), Color(0xFFAA7711))),
-                topLeft = startPositionForRect,
-                size = Size(widthOfRect, 15f),
-                cornerRadius = CornerRadius(50f)
-            )
+                drawRoundRect( // is the second rect of the progress. Has been created emphasizing the main rect
+                    brush = Brush.linearGradient(listOf(Color(0xFF6600FF), Color(0xFF9400D3))),
+                    topLeft = Offset(-0.5f, -0.5f),
+                    size = Size((size.width + 4.5f) * percentage, size.height + 3.5f),
+                    cornerRadius = CornerRadius(50f)
+                )
+
+                drawRoundRect( // is the main rect of the progress
+                    brush = Brush.linearGradient(listOf(Color(0xFFECE086), Color(0xFFAA7711))),
+                    size = Size(size.width * percentage, size.height),
+                    cornerRadius = CornerRadius(50f)
+                )
 
 
-            drawPath( // is the second arrow emphasizing a line of the main arrow
-                path = Path().apply {
-                    moveTo(startPositionForArrow.x, startPositionForArrow.y) // start position
-                    cubicTo(
-                        startPositionForArrow.x - 4f,
-                        startPositionForArrow.y, // draw a line a little lower in order to set the thickness of the arrow on the top
-                        startPositionForArrow.x + 50f,
-                        startPositionForArrow.y + 42f, // draw a line to the center. Change the first "x" in order to set the thickness of the arrow on the center on the left side
-                        startPositionForArrow.x,
-                        startPositionForArrow.y + 100f // draw a line to back to the beginning but quite lower
-                    )
-                    lineTo(
-                        startPositionForArrow.x - 3f,
-                        startPositionForArrow.y + 105f
-                    ) // draw a line a little lower in order to set the thickness of the arrow on the bottom
-                    lineTo(
-                        startPositionForArrow.x + 35f,
-                        startPositionForArrow.y + 50f
-                    ) // draw a line to back to the center. Change the first "x" in order to set the thickness of the arrow on the center on the right side
-                    close() // we've created a line
-                },
-                brush = Brush.radialGradient(colors = listOf(Color.Green, Color.Yellow)),
-                style = Stroke(width = 5f)
-            )
+                drawPath( // is the second arrow emphasizing a line of the main arrow
+                    path = Path().apply {
+                        moveTo(
+                            size.width * percentage - intentForWidthArrow,
+                            size.height / 2f - intentForHeightArrow
+                        ) // start position
+                        cubicTo(
+                            size.width * percentage - 4f - intentForWidthArrow,
+                            size.height / 2f - intentForHeightArrow, // draw a line a little lower in order to set the thickness of the arrow on the top
+                            size.width * percentage + 50f - intentForWidthArrow,
+                            size.height / 2f + 42f - intentForHeightArrow, // draw a line to the center. Change the first "x" in order to set the thickness of the arrow on the center on the left side
+                            size.width * percentage - intentForWidthArrow,
+                            size.height / 2f + 100f - intentForHeightArrow // draw a line to back to the beginning but quite lower
+                        )
+                        lineTo(
+                            size.width * percentage - 3f - intentForWidthArrow,
+                            size.height / 2f + 105f - intentForHeightArrow
+                        ) // draw a line a little lower in order to set the thickness of the arrow on the bottom
+                        lineTo(
+                            size.width * percentage + 35f - intentForWidthArrow,
+                            size.height / 2f + 50f - intentForHeightArrow
+                        ) // draw a line to back to the center. Change the first "x" in order to set the thickness of the arrow on the center on the right side
+                        close() // we've created a line
+                    },
+                    brush = Brush.radialGradient(colors = listOf(Color.Green, Color.Yellow)),
+                    style = Stroke(width = 3.5f)
+                )
 
-            drawPath( // is the main arrow
-                path = Path().apply {
-                    moveTo(startPositionForArrow.x, startPositionForArrow.y) // start position
-                    cubicTo(
-                        startPositionForArrow.x - 4f,
-                        startPositionForArrow.y, // draw a line a little lower in order to set the thickness of the arrow on the top
-                        startPositionForArrow.x + 50f,
-                        startPositionForArrow.y + 42f, // draw a line to the center. Change the first "x" in order to set the thickness of the arrow on the center on the left side
-                        startPositionForArrow.x,
-                        startPositionForArrow.y + 100f // draw a line to back to the beginning but quite lower
-                    )
-                    lineTo(
-                        startPositionForArrow.x - 3f,
-                        startPositionForArrow.y + 105f
-                    ) // draw a line a little lower in order to set the thickness of the arrow on the bottom
-                    lineTo(
-                        startPositionForArrow.x + 35f,
-                        startPositionForArrow.y + 50f
-                    ) // draw a line to back to the center. Change the first "x" in order to set the thickness of the arrow on the center on the right side
-                    close() // we've created a line
-                },
-                color = colorOfArrow,
-                style = Stroke(width = 4f)
+                drawPath( // is the main arrow
+                    path = Path().apply {
+                        moveTo(
+                            size.width * percentage - intentForWidthArrow,
+                            size.height / 2f - intentForHeightArrow
+                        ) // start position
+                        cubicTo(
+                            size.width * percentage - 4f - intentForWidthArrow,
+                            size.height / 2f - intentForHeightArrow, // draw a line a little lower in order to set the thickness of the arrow on the top
+                            size.width * percentage + 50f - intentForWidthArrow,
+                            size.height / 2f + 42f - intentForHeightArrow, // draw a line to the center. Change the first "x" in order to set the thickness of the arrow on the center on the left side
+                            size.width * percentage - intentForWidthArrow,
+                            size.height / 2f + 100f - intentForHeightArrow // draw a line to back to the beginning but quite lower
+                        )
+                        lineTo(
+                            size.width * percentage - 3f - intentForWidthArrow,
+                            size.height / 2f + 105f - intentForHeightArrow
+                        ) // draw a line a little lower in order to set the thickness of the arrow on the bottom
+                        lineTo(
+                            size.width * percentage + 35f - intentForWidthArrow,
+                            size.height / 2f + 50f - intentForHeightArrow
+                        ) // draw a line to back to the center. Change the first "x" in order to set the thickness of the arrow on the center on the right side
+                        close() // we've created a line
+                    },
+                    color = colorOfArrow,
+                    style = Stroke(width = 2f)
+                )
+            }
+
+            Text(
+                text = "$currentCoins |$nextCoins",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
             )
         }
-
-        Text(
-            text = "$currentCoins |$nextCoins",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(align = Alignment.TopCenter)
-                .padding(top = 80.dp)
-        )
     }
 }
 
@@ -425,7 +462,8 @@ fun ProgressBarOfAchievementsPreview() {
         ProgressBarForAchievement(
             currentCoins = 100,
             requirement = 1000,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            screenSize = SpaceScreenSize.Small
         )
     }
 }
@@ -433,8 +471,13 @@ fun ProgressBarOfAchievementsPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DrawArrowPreview() {
-    SpaceTheme {
-        ProgressBar(currentCoins = 40, nextCoins = 100, zodiacSign = R.string.zodiac_sign_aries)
+    SpaceTheme(darkTheme = true) {
+        ProgressBar(
+            currentCoins = 40,
+            nextCoins = 100,
+            zodiacSign = R.string.zodiac_sign_aries,
+            screenSize = SpaceScreenSize.Small
+        )
     }
 }
 
@@ -450,6 +493,17 @@ fun StatusScreenCompactPreview() {
 }
 
 @Preview(showBackground = true, widthDp = 700)
+@Composable
+fun StatusScreenMediumPreview() {
+    SpaceTheme {
+        StatusScreen(
+            modifier = Modifier, gameViewModel = viewModel(),
+            screenSize = SpaceScreenSize.Medium
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 1000)
 @Composable
 fun StatusScreenLargePreview() {
     SpaceTheme {

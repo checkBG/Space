@@ -19,7 +19,7 @@ import com.example.space.utils.SpaceScreenSize
 val gameViewModel: GameViewModel = GameViewModel()
 
 @Composable
-fun MainScreen(windowSize: WindowWidthSizeClass) {
+fun MainScreen(windowSize: WindowWidthSizeClass, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val currentScreen = backStack?.destination
@@ -59,18 +59,19 @@ fun MainScreen(windowSize: WindowWidthSizeClass) {
                 } else {
                     MaterialTheme.typography.displayMedium
                 },
-                color = Screens.valueOf(value = currentScreen?.route ?: Screens.Planet.name).color
+                color = Screens.valueOf(value = currentScreen?.route ?: Screens.Planet.name).color,
+                modifier = modifier
             )
         },
         bottomBar = {
-            BottomBar(navController = navController, currentScreen = currentScreen)
+            BottomBar(navController = navController, currentScreen = currentScreen, modifier = modifier)
         }
     ) { innerPadding ->
         BottomNavGraph(
             screenSize = screenSize,
             navController = navController,
             gameViewModel = gameViewModel,
-            modifier = Modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding)
         )
     }
 }

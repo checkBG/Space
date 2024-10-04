@@ -31,7 +31,7 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 private var selectedIndex = mutableIntStateOf(0)
 
 @Composable
-fun BottomBar(navController: NavHostController, currentScreen: NavDestination?) {
+fun BottomBar(navController: NavHostController, currentScreen: NavDestination?, modifier: Modifier) {
     val screens = listOfScreens
     val color by animateColorAsState(
         targetValue = when (currentScreen?.route) {
@@ -48,7 +48,8 @@ fun BottomBar(navController: NavHostController, currentScreen: NavDestination?) 
         barColor = Color.Transparent,
         ballColor = color,
         ballAnimation = Straight(tween(durationMillis = 450, delayMillis = 100)),
-        indentAnimation = Height(tween(300))
+        indentAnimation = Height(tween(300)),
+        modifier = modifier
     ) {
         screens.forEachIndexed { index, screen ->
             Row {
