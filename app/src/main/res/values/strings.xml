@@ -47,4 +47,7 @@
     <string name="get_reward">Get reward:\n%1s coins!</string>
     <string name="spent_money">Spent your money</string>
     <string name="spent_money_description">You\'ve spent %1s coins</string>
+    <string name="upgrade_card">Upgrade a card</string>
+    <string name="is_max_level">You\'ve comprehended the max level of the achievement!\nKeep on going!</string>
+    <string name="upgrade_card_description">You\'ve upgraded %1s cards</string>
 </resources>

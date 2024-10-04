@@ -9,10 +9,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
+import com.example.space.utils.SpaceScreenSize
 
 @Composable
 fun ShopScreen(
     modifier: Modifier = Modifier,
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel
 ) {
 
@@ -23,7 +25,10 @@ fun ShopScreen(
 fun ShopScreenPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            ShopScreen(modifier = Modifier.padding(innerPadding), gameViewModel = viewModel())
+            ShopScreen(
+                modifier = Modifier.padding(innerPadding), gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Small
+            )
         }
     }
 }

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -53,12 +53,14 @@ import com.example.space.model.Achievement
 import com.example.space.model.AchievementType
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
+import com.example.space.utils.SpaceScreenSize
 import com.example.space.utils.getColor
 import java.util.Locale
 
 @Composable
 fun StatusScreen(
     modifier: Modifier = Modifier,
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel
 ) {
     val gamePlanetState by gameViewModel.planet.collectAsState()
@@ -99,6 +101,7 @@ fun ColumnOfAchievements(
                     reward = reward,
                     done = gameViewModel.getCheckedAchievement(achievement = type),
                     type = type,
+                    isMaxLevel = achievement.isMaxLevel,
                     requirement = requirement,
                     nameOfAchievement = nameOfAchievement,
                     descriptionOfAchievement = descriptionOfAchievement,
@@ -115,6 +118,7 @@ fun CardOfAchievement(
     modifier: Modifier = Modifier,
     reward: Int,
     isCompleted: Boolean,
+    isMaxLevel: Boolean,
     type: AchievementType,
     done: Int,
     requirement: Int,
@@ -122,15 +126,21 @@ fun CardOfAchievement(
     @StringRes descriptionOfAchievement: Int,
     @DrawableRes imageOfAchievement: Int
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp)
-    ) {
+    val turn by animateFloatAsState(
+        targetValue = if (isCompleted) 0f else listOf(360f, -360f, 720f, -720f).random(),
+        animationSpec = tween(listOf(1000, 900, 800, 700, 600, 500).random()),
+        label = "floatStateTurn"
+    )
+
+    Column(modifier = modifier) {
         HorizontalDivider(thickness = 2.dp, color = Color.White)
         Spacer(modifier = Modifier.height(5.dp))
 
-        Row {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.Center)
+        ) {
             Card {
                 Image(
                     painter = painterResource(id = imageOfAchievement),
@@ -138,12 +148,13 @@ fun CardOfAchievement(
                     modifier = Modifier
                         .size(105.dp)
                         .padding(5.dp)
+                        .rotate(degrees = turn)
                 )
             }
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            if (!isCompleted) {
+            if (!isCompleted && !isMaxLevel) {
                 Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
                     Column(modifier = Modifier.padding(3.dp)) {
                         Text(
@@ -173,7 +184,7 @@ fun CardOfAchievement(
                         )
                     }
                 }
-            } else {
+            } else if (isCompleted && !isMaxLevel) {
                 Card(
                     onClick = { gameViewModel.gotReward(achievement = type) },
                     border = BorderStroke(
@@ -198,13 +209,31 @@ fun CardOfAchievement(
                             .align(alignment = Alignment.CenterHorizontally)
                     )
                 }
+            } else {
+                Card(modifier = Modifier.sizeIn(minWidth = 500.dp, minHeight = 105.dp)) {
+                    Text(
+                        text = stringResource(id = R.string.is_max_level),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .align(alignment = Alignment.Start)
+                    )
+                }
             }
         }
 
         /* TODO: Have to implement Progress bar */
+        Spacer(modifier = Modifier.height(8.dp))
 
+        if (!isMaxLevel) {
+            ProgressBarForAchievement(
+                currentCoins = done,
+                requirement = requirement,
+                modifier = Modifier.fillMaxSize().wrapContentSize()
+            )
+        }
 
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         HorizontalDivider(thickness = 2.dp, color = Color.White)
     }
 }
@@ -220,9 +249,40 @@ fun StatusScreenBackground(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProgressBarForAchievement(modifier: Modifier = Modifier) {
-    Canvas(modifier = modifier.fillMaxWidth()) {
+fun ProgressBarForAchievement(
+    modifier: Modifier = Modifier,
+    currentCoins: Int,
+    requirement: Int
+) {
+    val percentage by animateFloatAsState(
+        targetValue = if (currentCoins <= requirement) {
+            currentCoins.toFloat() / requirement.toFloat()
+        } else 1f,
+        animationSpec = tween(250),
+        label = "floatStateProgressBar"
+    )
 
+    Box(modifier = modifier) {
+        Canvas(modifier = Modifier.size(width = 350.dp, height = 8.dp)) {
+            drawRoundRect( // is the background of the rect if the progress less than 100%
+                color = Color(0xFFFFFFFF),
+                size = Size(size.width, size.height - 1f),
+                cornerRadius = CornerRadius(50f)
+            )
+
+            drawRoundRect( // is the second rect of the progress. Has been created emphasizing the main rect
+                color = Color(0xFF6600FF),
+                topLeft = Offset(-0.5f, -0.5f),
+                size = Size(size.width * percentage, size.height),
+                cornerRadius = CornerRadius(50f)
+            )
+
+            drawRoundRect( // is the main rect of the progress
+                color = Color(0xFF4F800F),
+                size = Size(size.width * percentage, size.height),
+                cornerRadius = CornerRadius(50f)
+            )
+        }
     }
 }
 
@@ -360,6 +420,18 @@ fun ProgressBar(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
+fun ProgressBarOfAchievementsPreview() {
+    SpaceTheme(darkTheme = true) {
+        ProgressBarForAchievement(
+            currentCoins = 100,
+            requirement = 1000,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
 fun DrawArrowPreview() {
     SpaceTheme {
         ProgressBar(currentCoins = 40, nextCoins = 100, zodiacSign = R.string.zodiac_sign_aries)
@@ -368,8 +440,22 @@ fun DrawArrowPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun StatusScreenPreview() {
+fun StatusScreenCompactPreview() {
     SpaceTheme {
-        StatusScreen(modifier = Modifier, gameViewModel = viewModel())
+        StatusScreen(
+            modifier = Modifier, gameViewModel = viewModel(),
+            screenSize = SpaceScreenSize.Small
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 700)
+@Composable
+fun StatusScreenLargePreview() {
+    SpaceTheme {
+        StatusScreen(
+            modifier = Modifier, gameViewModel = viewModel(),
+            screenSize = SpaceScreenSize.Large
+        )
     }
 }

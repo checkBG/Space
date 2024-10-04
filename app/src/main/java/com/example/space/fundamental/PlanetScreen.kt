@@ -45,10 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
+import com.example.space.utils.SpaceScreenSize
 import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -57,6 +59,7 @@ import kotlin.math.sin
 @Composable
 fun PlanetScreen(
     modifier: Modifier = Modifier,
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel
 ) {
     val gamePlanetState by gameViewModel.planet.collectAsState()
@@ -69,7 +72,8 @@ fun PlanetScreen(
 
         CountOfCoinsRow(
             currentCoins = gamePlanetState.coins,
-            progressPercentage = gameViewModel.progressPercentage
+            progressPercentage = gameViewModel.progressPercentage,
+            screenSize = screenSize
         )
 
     }
@@ -154,6 +158,7 @@ private fun CustomProgressBar(
 
 @Composable
 fun CountOfCoinsRow(
+    screenSize: SpaceScreenSize,
     currentCoins: Int,
     modifier: Modifier = Modifier,
     progressPercentage: Float = 1.0f
@@ -171,6 +176,11 @@ fun CountOfCoinsRow(
             text = String.format(Locale.getDefault(), "%,d", currentCoins),
             style = MaterialTheme.typography.displayLarge,
             color = colorResource(id = R.color.sun),
+            fontSize = when (screenSize) {
+                SpaceScreenSize.Small -> 33.sp
+                SpaceScreenSize.Medium -> 42.sp
+                SpaceScreenSize.Large -> 60.sp
+            },
             modifier = Modifier
         )
     }
@@ -231,7 +241,8 @@ fun CountOfCoinsRowPreview() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             CountOfCoinsRow(
                 currentCoins = 10,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                screenSize = SpaceScreenSize.Small
             )
         }
     }
@@ -265,7 +276,11 @@ fun SpaceBackgroundPreview() {
 fun SpaceAppPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            PlanetScreen(modifier = Modifier.padding(innerPadding), gameViewModel = viewModel())
+            PlanetScreen(
+                modifier = Modifier.padding(innerPadding),
+                gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Small
+            )
         }
     }
 }

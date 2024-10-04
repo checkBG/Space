@@ -207,11 +207,18 @@ class GameViewModel : ViewModel() {
         mutableListOf(
             Achievement( // require taps on the screen
                 achievement = AchievementTapOnScreen.achievementTapOnScreen(level = 1),
-                isCompleted = false
+                isCompleted = false,
+                isMaxLevel = false
             ),
-            Achievement(
+            Achievement( // require spent money
                 achievement = AchievementSpentMoney.achievementSpentMoney(level = 1),
-                isCompleted = false
+                isCompleted = false,
+                isMaxLevel = false
+            ),
+            Achievement( // require upgrade cards
+                achievement = AchievementUpgradeCards.achievementUpgradeCards(level = 1),
+                isCompleted = false,
+                isMaxLevel = false
             )
         )
     )
@@ -283,7 +290,7 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun checkGetAchievement(isGotReward: Boolean = false) {
+    private fun checkGetAchievement(isGotReward: Boolean = false, isMaxLevel: Boolean = false) {
         _listOfAchievements.value.forEachIndexed { index, achievement ->
             if (achievement.achievement.requirement <= getCheckedAchievement(achievement = achievement.achievement.type) && !achievement.isCompleted) {
                 _listOfAchievements.value[index] = _listOfAchievements.value[index].copy(
@@ -292,13 +299,20 @@ class GameViewModel : ViewModel() {
                             AchievementType.Tap -> AchievementTapOnScreen.achievementTapOnScreen(
                                 level = listOfAchievements.value[index].achievement.level.inc()
                             )
+
+                            AchievementType.Upgrade -> AchievementUpgradeCards.achievementUpgradeCards(
+                                level = listOfAchievements.value[index].achievement.level.inc()
+                            )
+
                             else -> AchievementSpentMoney.achievementSpentMoney(level = listOfAchievements.value[index].achievement.level.inc()) /* TODO:*/
                         }
                     } else {
                         achievement.achievement
                     },
-                    isCompleted = !isGotReward
+                    isCompleted = !isGotReward,
+                    isMaxLevel = isMaxLevel
                 )
+                checkGetAchievement(isGotReward = false, isMaxLevel = achievement.achievement.level == rangeOfLevels.last)
             }
         }
     }

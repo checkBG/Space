@@ -51,6 +51,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation("androidx.compose.material3:material3-window-size-class")
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core.jvm)
     implementation(libs.androidx.core.ktx)

@@ -11,9 +11,11 @@ import com.example.space.fundamental.ShopScreen
 import com.example.space.fundamental.StatusScreen
 import com.example.space.fundamental.UpgradeScreen
 import com.example.space.model.GameViewModel
+import com.example.space.utils.SpaceScreenSize
 
 @Composable
 fun BottomNavGraph(
+    screenSize: SpaceScreenSize,
     navController: NavHostController,
     gameViewModel: GameViewModel,
     modifier: Modifier = Modifier
@@ -24,19 +26,19 @@ fun BottomNavGraph(
         modifier = Modifier.fillMaxSize()
     ) {
         composable(route = BottomBarScreen.Planet.route) {
-            PlanetScreen(gameViewModel = gameViewModel)
+            PlanetScreen(gameViewModel = gameViewModel, screenSize = screenSize)
         }
 
         composable(route = BottomBarScreen.Upgrade.route) {
-            UpgradeScreen(gameViewModel = gameViewModel, modifier = modifier)
+            UpgradeScreen(gameViewModel = gameViewModel, modifier = modifier, screenSize = screenSize)
         }
 
         composable(route = BottomBarScreen.Shop.route) {
-            ShopScreen(gameViewModel = gameViewModel)
+            ShopScreen(gameViewModel = gameViewModel, screenSize = screenSize)
         }
 
         composable(route = BottomBarScreen.Status.route) {
-            StatusScreen(gameViewModel = gameViewModel, modifier = modifier)
+            StatusScreen(gameViewModel = gameViewModel, modifier = modifier, screenSize = screenSize)
         }
     }
 }

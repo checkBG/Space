@@ -24,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
@@ -38,10 +37,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.space.R
 import com.example.space.model.GameViewModel
 import com.example.space.ui.theme.SpaceTheme
+import com.example.space.utils.SpaceScreenSize
 
 @Composable
 fun UpgradeScreen(
     modifier: Modifier = Modifier,
+    screenSize: SpaceScreenSize,
     gameViewModel: GameViewModel
 ) {
     Box {
@@ -76,7 +77,7 @@ fun UpgradeBackgroundScreen() {
     Image(
         painter = painterResource(id = R.drawable.spacebackgroundforupgradescreen5120x2880),
         contentDescription = null,
-        contentScale = ContentScale.FillBounds,
+        contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -188,7 +189,10 @@ fun UpgradeSelectionCardPreview() {
 fun UpgradeScreenPreview() {
     SpaceTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            UpgradeScreen(modifier = Modifier.padding(innerPadding), gameViewModel = viewModel())
+            UpgradeScreen(
+                modifier = Modifier.padding(innerPadding), gameViewModel = viewModel(),
+                screenSize = SpaceScreenSize.Small
+            )
         }
     }
 }

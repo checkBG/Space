@@ -6,7 +6,8 @@ import com.example.space.R
 
 data class Achievement(
     val achievement: AchievementDetail,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val isMaxLevel: Boolean = achievement.level == rangeOfLevels.last
 ) {
 //    companion object {
 //        fun Achievement.updateUpgradeDataInTheList(): Achievement {
@@ -30,6 +31,49 @@ abstract class AchievementDetail(val level: Int) {
     abstract val imageOfAchievement: Int
 }
 
+class AchievementUpgradeCards(level: Int) : AchievementDetail(level) {
+    override val requirement: Int = requirementValue(level = level)
+    override val reward: Int = rewardValue(level = level)
+    override val type: AchievementType = AchievementType.Upgrade
+    override val nameOfAchievement: Int = R.string.upgrade_card
+    override val descriptionOfAchievement: Int = R.string.upgrade_card_description
+    override val imageOfAchievement: Int = R.drawable.card_send_svgrepo_com
+
+    companion object {
+        private fun requirementValue(level: Int): Int {
+            return when (level) {
+                1 -> 1
+                2 -> 2
+                3 -> 5
+                4 -> 7
+                5 -> 8
+                6 -> 15
+                7 -> 22
+                8 -> 25
+                9 -> 30
+                else -> 36
+            }
+        }
+
+        private fun rewardValue(level: Int): Int {
+            return when (level) {
+                1 -> 50
+                2 -> 70
+                3 -> 120
+                4 -> 700
+                5 -> 1400
+                6 -> 3900
+                7 -> 10000
+                8 -> 14820
+                9 -> 26000
+                else -> 40000
+            }
+        }
+
+        fun achievementUpgradeCards(level: Int) = AchievementUpgradeCards(level = level)
+    }
+}
+
 class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
     override val requirement: Int = requirementValue(level = level)
     override val reward: Int = rewardValue(level = level)
@@ -41,7 +85,7 @@ class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
 
     companion object {
         private fun requirementValue(level: Int): Int {
-            return when(level) {
+            return when (level) {
                 1 -> 300
                 2 -> 1000
                 3 -> 5000
@@ -51,12 +95,12 @@ class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
                 7 -> 1_000_000
                 8 -> 10_000_000
                 9 -> 35_000_000
-                else -> 100_000_000 /* TODO: Implementing the function */
+                else -> 100_000_000
             }
         }
 
         private fun rewardValue(level: Int): Int {
-            return when(level) {
+            return when (level) {
                 1 -> 50
                 2 -> 200
                 3 -> 500
@@ -66,13 +110,13 @@ class AchievementSpentMoney(level: Int) : AchievementDetail(level) {
                 7 -> 24000
                 8 -> 80000
                 9 -> 130_000
-                else -> 1_000_000 /* TODO: Implementing the function */
+                else -> 1_000_000
             }
         }
 
         fun achievementSpentMoney(level: Int) = AchievementSpentMoney(level = level)
     }
-} /* TODO: Implementing the class */
+}
 
 class AchievementTapOnScreen(level: Int) : AchievementDetail(level) {
     override val requirement: Int = requirementValue(level = level)

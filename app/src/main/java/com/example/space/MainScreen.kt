@@ -3,6 +3,7 @@ package com.example.space
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,15 +14,35 @@ import com.example.space.app.bars.BottomNavGraph
 import com.example.space.app.bars.Screens
 import com.example.space.app.bars.SpaceTopAppBar
 import com.example.space.model.GameViewModel
+import com.example.space.utils.SpaceScreenSize
 
 val gameViewModel: GameViewModel = GameViewModel()
 
 @Composable
-fun MainScreen() {
+fun MainScreen(windowSize: WindowWidthSizeClass) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val currentScreen = backStack?.destination
     val conditionForTopAppBar = (currentScreen?.route ?: Screens.Planet.name) != Screens.Planet.name
+    val screenSize: SpaceScreenSize
+
+    when (windowSize) {
+        WindowWidthSizeClass.Compact -> {
+            screenSize = SpaceScreenSize.Small
+        }
+
+        WindowWidthSizeClass.Medium -> {
+            screenSize = SpaceScreenSize.Medium
+        }
+
+        WindowWidthSizeClass.Expanded -> {
+            screenSize = SpaceScreenSize.Large
+        }
+
+        else -> {
+            screenSize = SpaceScreenSize.Small
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -45,7 +66,11 @@ fun MainScreen() {
             BottomBar(navController = navController, currentScreen = currentScreen)
         }
     ) { innerPadding ->
-//        @Suppress("UNUSED_VARIABLE") val unnecessaryPadding = innerPadding
-        BottomNavGraph(navController = navController, gameViewModel = gameViewModel, modifier = Modifier.padding(innerPadding))
+        BottomNavGraph(
+            screenSize = screenSize,
+            navController = navController,
+            gameViewModel = gameViewModel,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }
